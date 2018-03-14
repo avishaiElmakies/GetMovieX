@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:title="add"
+        app:showAsAction="always"
+        android:icon="@drawable/addition_sign">
+    <menu>
+
+        <item android:title="@string/add_movie"
+            android:id="@+id/addItem"/>
+        <item
+            android:id="@+id/addItemFromInternet"
+            android:title="@string/add_from_inter" />
+    </menu>
+
+    </item>
+
+    <item android:title="menu"
+        app:showAsAction="always"
+       android:icon="@drawable/list_symbol_of_three_items_with_dots">
+    <menu>
+            <item
+                android:id="@+id/exitItem"
+                android:title="@string/exit" />
+            <item
+                android:id="@+id/deleteAll"
+                android:title="@string/delete_all" />
+    </menu>
+    </item>
+
+</menu>

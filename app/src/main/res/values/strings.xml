@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">GetMovieX</string>
+    <string name="add_movie">Add movie</string>
+    <string name="delete_all">Delete All</string>
+    <string name="exit">Exit</string>
+    <string name="add_from_inter">Add movie from internet</string>
+</resources>
