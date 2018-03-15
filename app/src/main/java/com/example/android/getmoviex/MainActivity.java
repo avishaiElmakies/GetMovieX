@@ -22,6 +22,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
+    //todo WHEN A TURTLE MEETS WATERMELON YOU GET A  WHITE NOOL!!!
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater=getMenuInflater();
