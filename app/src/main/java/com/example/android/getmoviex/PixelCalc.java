@@ -8,7 +8,7 @@ import android.util.TypedValue;
  */
 
 public class PixelCalc {
-    public static int getPixels(float dp){
+    public static int getPixels(int dp){
         DisplayMetrics displayMetrics=MyApp.getContext().getResources().getDisplayMetrics();
         float px= TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,dp,displayMetrics);
         return Math.round(px);

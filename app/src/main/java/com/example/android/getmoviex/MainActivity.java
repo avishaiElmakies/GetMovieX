@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.ListView;
 
+import java.util.ArrayList;
 import java.util.zip.Inflater;
 
 public class MainActivity extends AppCompatActivity {
@@ -16,10 +18,20 @@ public class MainActivity extends AppCompatActivity {
     private MenuItem addMovieItemInter;
     private MenuItem exitItem;
     private MenuItem deleteAllItem;
+    private ListView myListView;
+    private ArrayList<Movie> myMovie;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main_item_layout);
+        setContentView(R.layout.activity_main);
+        myMovie=new ArrayList <>();
+        myListView=findViewById(R.id.myListView);
+        myMovie.add(new Movie("Harry Potter","this is the body","url"));
+        myMovie.add(new Movie("Harry Potter","aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","url"));
+        myMovie.add(new Movie("Harry Potter","this is the secend movie","url"));
+        MovieAdapter myAdapter=new MovieAdapter(this,myMovie);
+        myListView.setAdapter(myAdapter);
+
     }
 
     @Override

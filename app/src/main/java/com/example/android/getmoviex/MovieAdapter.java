@@ -20,11 +20,12 @@ public class MovieAdapter extends ArrayAdapter<Movie> {
     private TextView txtDes;
     private ImageView imageView;
 
-    private final static float MAX_DES_HEIGHT=MyApp.getContext().getResources().getDimension(R.dimen.max_height);
-    private final static float TEXT_SIZE=MyApp.getContext().getResources().getDimension(R.dimen.text_size);
-    private final static float MOVIE_WIDTH=MyApp.getContext().getResources().getDimension(R.dimen.movie_width);
-    public MovieAdapter(@NonNull Context context, int resource, @NonNull List<Movie> objects) {
-        super(context, resource, objects);
+    //private final static float MAX_DES_HEIGHT=MyApp.getContext().getResources().getDimension(R.dimen.max_height);
+    //private final static float TEXT_SIZE=MyApp.getContext().getResources().getDimension(R.dimen.text_size);
+    //private final static float MOVIE_WIDTH=MyApp.getContext().getResources().getDimension(R.dimen.movie_width);
+    private final static int ITEM_HEIGHT_DP=90;
+    public MovieAdapter(@NonNull Context context, @NonNull List<Movie> objects) {
+        super(context,0,objects);
         layoutInflater=LayoutInflater.from(context);
     }
 
@@ -35,19 +36,11 @@ public class MovieAdapter extends ArrayAdapter<Movie> {
         txtSubject=relativeLayout.findViewById(R.id.textSubject);
         txtDes=relativeLayout.findViewById(R.id.textDes);
         imageView=relativeLayout.findViewById(R.id.imageView);
-        RelativeLayout.LayoutParams imgParams=(RelativeLayout.LayoutParams)imageView.getLayoutParams();
-        int px=PixelCalc.getPixels(MOVIE_WIDTH);
-        imgParams.width=px;
-        imageView.setLayoutParams(imgParams);
-        px=PixelCalc.getPixels(MAX_DES_HEIGHT);
-        txtDes.setMaxHeight(px);
-        px=PixelCalc.getPixels(TEXT_SIZE);
-        txtDes.setTextSize(px);
-        txtSubject.setTextSize(px);
+        RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,PixelCalc.getPixels(ITEM_HEIGHT_DP));
+        relativeLayout.setLayoutParams(params);
         Movie movie=getItem(position);
         txtSubject.setText(movie.getSubject());
-        txtDes.setText(movie.getSubject());
-
+        txtDes.setText(movie.getBody());
         return relativeLayout;
     }
 
