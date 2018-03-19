@@ -7,9 +7,10 @@
     android:angle="45"
     android:centerX="35%"
 
-    android:endColor="#9eabff"
-    android:startColor="#6984ff"
+    android:endColor="#3c59e1"
+    android:startColor="@color/colorPrimaryDark"
     android:type="linear"
     />
+
 
 </shape>

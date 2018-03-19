@@ -4,5 +4,12 @@
     <string name="delete_all">Delete All</string>
     <string name="exit">Exit</string>
     <string name="add_from_inter">Add movie from internet</string>
+    <string name="subject">Subject:</string>
+    <string name="name">name</string>
+    <string name="body">Description</string>
+    <string name="url">URL</string>
+    <string name="url_">URL:</string>
+    <string name="show">show</string>
+    <string name="cancel">cancel</string>
 
 </resources>

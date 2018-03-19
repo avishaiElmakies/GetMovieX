@@ -6,6 +6,8 @@
         android:layout_height="wrap_content"
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_gravity="center"
+
         >
 
         <ImageView
@@ -14,28 +16,35 @@
             android:layout_height="wrap_content"
             app:srcCompat="@mipmap/ic_launcher"
             android:foregroundGravity="center"
-            android:src="@drawable/ic_launcher_background"
-            android:layout_marginTop="@dimen/margin"/>
-
-        <TextView
-            style="@style/TextStyle"
-            android:id="@+id/textSubject"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_toEndOf="@+id/imageView"
-            android:layout_marginTop="@dimen/margin"
-            android:text="TextView"
-            android:textSize="@dimen/movie_name_size"
-            android:gravity="center"
-            android:textColor="#ffffff"
+            android:src="@drawable/download"
+            android:scaleType="fitCenter"
             />
 
-        <TextView
-            android:layout_height="match_parent"
-            style="@style/TextStyle"
-            android:id="@+id/textDes"
-            android:layout_below="@+id/textSubject"
-            android:layout_toEndOf="@+id/imageView"
-            android:layout_centerVertical="true"
-            />
-    </RelativeLayout>
+    <TextView
+        android:id="@+id/textSubject"
+        style="@style/TextStyle"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="@dimen/margin"
+        android:layout_toEndOf="@+id/imageView"
+        android:gravity="left"
+        android:padding="@dimen/padding"
+        android:text="TextView"
+        android:textColor="@color/white"
+        android:textSize="@dimen/movie_name_size"
+        android:textStyle="bold" />
+
+                <TextView
+                    android:layout_height="match_parent"
+                    style="@style/TextStyle"
+                    android:id="@+id/textDes"
+                    android:layout_below="@+id/textSubject"
+                    android:layout_toEndOf="@+id/imageView"
+                    android:layout_centerVertical="true"
+                    android:layout_marginBottom="@dimen/margin_bottom"
+                    android:textColor="@color/white"
+                    android:paddingStart="@dimen/margin_bottom"
+                    android:paddingEnd="@dimen/margin_bottom"
+                    />
+
+</RelativeLayout>
