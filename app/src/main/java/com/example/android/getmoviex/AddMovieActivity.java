@@ -10,6 +10,7 @@ import android.widget.Scroller;
 import android.widget.TextView;
 
 public class AddMovieActivity extends AppCompatActivity {
+    //TODO change Scroller appearance
     private EditText editSubject;
     private EditText editBody;
     private ImageView imageView;
