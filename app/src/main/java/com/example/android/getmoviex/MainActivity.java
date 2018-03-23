@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.zip.Inflater;
@@ -20,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
     private MenuItem deleteAllItem;
     private ListView myListView;
     private ArrayList<Movie> myMovie;
+    MovieAdapter myAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         myMovie.add(new Movie("Harry Potter","this is the body","url"));
         myMovie.add(new Movie("Harry Potter","aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","url"));
         myMovie.add(new Movie("Harry Potter","this is the secend movie","url"));
-        MovieAdapter myAdapter=new MovieAdapter(this,myMovie);
+        myAdapter=new MovieAdapter(this,myMovie);
         myListView.setAdapter(myAdapter);
 
     }
@@ -56,5 +58,22 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return false;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode==REQUST_CODE_ADD_MOVIE){
+            if(resultCode==RESULT_OK){
+                Movie m=(Movie)data.getSerializableExtra("movie");
+                myAdapter.add(m);
+                myListView.setAdapter(myAdapter);
+                //todo: add sqlHelper
+            }
+        }
+        if(requestCode==REQUST_CODE_ADD_MOVIE){
+            if(resultCode==RESULT_CANCELED){
+                Toast.makeText(this,"canceled",Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }

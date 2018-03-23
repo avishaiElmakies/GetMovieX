@@ -89,7 +89,7 @@
                 android:weightSum="3">
 
                 <EditText
-                    android:id="@+id/editText7"
+                    android:id="@+id/imageUrlEdit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -99,9 +99,9 @@
                     android:ems="10"
                     android:hint="@string/url"
                     android:inputType="textPersonName"
-                    android:textSize="@dimen/add_text_size"
                     android:textColor="@color/white"
-                android:textColorHint="@color/white"/>
+                    android:textColorHint="@color/white"
+                    android:textSize="@dimen/add_text_size" />
 
                 <Button
                     android:background="@drawable/button"
@@ -139,14 +139,15 @@
                         style="@style/ButtonStyle"
                         android:layout_weight="1"
                         android:text="@android:string/ok"
-                        />
+                        android:onClick="onOkClick"/>
 
                     <Button
                         android:id="@+id/btnCancel"
                         style="@style/ButtonStyle"
                         android:layout_margin="@dimen/margin"
                         android:layout_weight="1"
-                        android:text="@string/cancel" />
+                        android:text="@string/cancel"
+                        android:onClick="onCancelClick"/>
                         </LinearLayout>
                 </LinearLayout>
         </RelativeLayout>
