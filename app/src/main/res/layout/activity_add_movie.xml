@@ -112,7 +112,8 @@
                     android:layout_margin="@dimen/margin"
                     android:layout_weight="1"
                     android:text="@string/show"
-                    android:textColor="@color/white"/>
+                    android:textColor="@color/white"
+                    android:onClick="onShowClick"/>
             </LinearLayout>
 
             <LinearLayout

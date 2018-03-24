@@ -1,6 +1,7 @@
 package com.example.android.getmoviex;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -10,14 +11,16 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Scroller;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class AddMovieActivity extends AppCompatActivity {
+public class AddMovieActivity extends AppCompatActivity implements ImageTask.CallBack {
     //TODO change Scroller appearance
     //todo add show picture
     private EditText editSubject;
     private EditText editBody;
     private EditText editUrl;
     private ImageView imageView;
+    Intent intent;
     private RelativeLayout relativeLayout;
     private static int IMAGE_VIEW_WIDTH_DP=150;
     private static int IMAGE_VIEW_HEiGHT_DP=225;
@@ -39,7 +42,7 @@ public class AddMovieActivity extends AppCompatActivity {
     }
 
     public void onOkClick(View view) {
-        Intent intent=new Intent();
+        intent=new Intent();
         intent.putExtra("movie",new Movie(editSubject.getText().toString(),editBody.getText().toString(),editUrl.getText().toString()));
         setResult(RESULT_OK,intent);
         finish();
@@ -47,5 +50,25 @@ public class AddMovieActivity extends AppCompatActivity {
 
     public void onCancelClick(View view) {
         finish();
+    }
+
+    public void onShowClick(View view) {
+        ImageTask imageTask=new ImageTask(this);
+        imageTask.execute(editUrl.getText().toString());
+    }
+
+    @Override
+    public void preExucute() {
+        Toast.makeText(this,"Starting",Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onSucces(Bitmap bitmap) {
+        imageView.setImageBitmap(bitmap);
+    }
+
+    @Override
+    public void onFail() {
+
     }
 }

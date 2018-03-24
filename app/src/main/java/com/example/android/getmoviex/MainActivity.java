@@ -1,18 +1,25 @@
 package com.example.android.getmoviex;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.media.Image;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.zip.Inflater;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ImageTask.CallBack{
     private static int REQUST_CODE_ADD_MOVIE=1;
     private static int REQUST_CODE_EDIT_MOVIE=2;
     private MenuItem addMovieItem;
@@ -34,7 +41,6 @@ public class MainActivity extends AppCompatActivity {
         myMovie.add(new Movie("Harry Potter","this is the secend movie","url"));
         myAdapter=new MovieAdapter(this,myMovie);
         myListView.setAdapter(myAdapter);
-
     }
 
     @Override
@@ -66,7 +72,8 @@ public class MainActivity extends AppCompatActivity {
             if(resultCode==RESULT_OK){
                 Movie m=(Movie)data.getSerializableExtra("movie");
                 myAdapter.add(m);
-                myListView.setAdapter(myAdapter);
+                ImageTask imageTask=new ImageTask(this);
+                imageTask.execute(m.getUrl());
                 //todo: add sqlHelper
             }
         }
@@ -75,5 +82,25 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this,"canceled",Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+
+    @Override
+    public void preExucute() {
+
+    }
+
+    @Override
+    public void onSucces(Bitmap bitmap) {
+        Movie m=myAdapter.getItem(myAdapter.getCount()-1);
+        m.setBitmap(bitmap);
+        myAdapter.notifyDataSetChanged();
+
+        }
+
+
+    @Override
+    public void onFail() {
+
     }
 }

@@ -16,7 +16,6 @@
             android:layout_height="wrap_content"
             app:srcCompat="@mipmap/ic_launcher"
             android:foregroundGravity="center"
-            android:src="@drawable/download"
             android:scaleType="fitCenter"
             />
 

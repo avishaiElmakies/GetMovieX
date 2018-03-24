@@ -1,5 +1,7 @@
 package com.example.android.getmoviex;
 
+import android.graphics.Bitmap;
+
 import java.io.Serializable;
 
 /**
@@ -11,6 +13,7 @@ public class Movie implements Serializable {
     private String subject;
     private String body;
     private String url;
+    private Bitmap bitmap;
     public Movie(){
 
     }
@@ -56,5 +59,11 @@ public class Movie implements Serializable {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+    public Bitmap getBitmap(){
+        return bitmap;
+    }
+    public void setBitmap(Bitmap bitmap){
+        this.bitmap=bitmap;
     }
 }
