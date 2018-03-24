@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.Scroller;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,7 +21,7 @@ public class AddMovieActivity extends AppCompatActivity implements ImageTask.Cal
     private EditText editBody;
     private EditText editUrl;
     private ImageView imageView;
-
+    private ScrollView scrollView;
     private RelativeLayout relativeLayout;
     private static int IMAGE_VIEW_WIDTH_DP=150;
     private static int IMAGE_VIEW_HEiGHT_DP=225;
@@ -30,8 +31,9 @@ public class AddMovieActivity extends AppCompatActivity implements ImageTask.Cal
         setContentView(R.layout.activity_add_movie);
         Intent intent=getIntent();
         Movie m=(Movie) intent.getSerializableExtra("movie");
+        scrollView=findViewById(R.id.scroll);
         relativeLayout=findViewById(R.id.relLayout);
-        MyApp.setBackground(relativeLayout);
+        MyApp.setBackground(scrollView);
         editBody=findViewById(R.id.addMovieEdit);
         editSubject=findViewById(R.id.movieNameEdit);
         editUrl=findViewById(R.id.imageUrlEdit);
