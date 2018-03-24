@@ -20,7 +20,7 @@ public class AddMovieActivity extends AppCompatActivity implements ImageTask.Cal
     private EditText editBody;
     private EditText editUrl;
     private ImageView imageView;
-    Intent intent;
+
     private RelativeLayout relativeLayout;
     private static int IMAGE_VIEW_WIDTH_DP=150;
     private static int IMAGE_VIEW_HEiGHT_DP=225;
@@ -28,6 +28,8 @@ public class AddMovieActivity extends AppCompatActivity implements ImageTask.Cal
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_movie);
+        Intent intent=getIntent();
+        Movie m=(Movie) intent.getSerializableExtra("movie");
         relativeLayout=findViewById(R.id.relLayout);
         MyApp.setBackground(relativeLayout);
         editBody=findViewById(R.id.addMovieEdit);
@@ -39,10 +41,16 @@ public class AddMovieActivity extends AppCompatActivity implements ImageTask.Cal
         params.width=PixelCalc.getPixels(IMAGE_VIEW_WIDTH_DP);
         params.height=PixelCalc.getPixels(IMAGE_VIEW_HEiGHT_DP);
         imageView.setLayoutParams(params);
+        if(m!=null){
+            editBody.setText(m.getBody());
+            editSubject.setText(m.getSubject());
+            editUrl.setText(m.getUrl());
+            imageView.setImageBitmap(m.getBitmap());
+        }
     }
 
     public void onOkClick(View view) {
-        intent=new Intent();
+       Intent intent=new Intent();
         intent.putExtra("movie",new Movie(editSubject.getText().toString(),editBody.getText().toString(),editUrl.getText().toString()));
         setResult(RESULT_OK,intent);
         finish();

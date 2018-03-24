@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -41,6 +42,15 @@ public class MainActivity extends AppCompatActivity implements ImageTask.CallBac
         myMovie.add(new Movie("Harry Potter","this is the secend movie","url"));
         myAdapter=new MovieAdapter(this,myMovie);
         myListView.setAdapter(myAdapter);
+        myListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Movie m =(Movie)adapterView.getItemAtPosition(i);
+                Intent intent=new Intent(getBaseContext(),AddMovieActivity.class);
+                intent.putExtra("movie",m);
+                startActivityForResult(intent,REQUST_CODE_EDIT_MOVIE);
+            }
+        });
     }
 
     @Override
