@@ -16,7 +16,6 @@ import android.widget.Toast;
 
 public class AddMovieActivity extends AppCompatActivity implements ImageTask.CallBack {
     //TODO change Scroller appearance
-    //todo add show picture
     private EditText editSubject;
     private EditText editBody;
     private EditText editUrl;
@@ -47,7 +46,7 @@ public class AddMovieActivity extends AppCompatActivity implements ImageTask.Cal
             editBody.setText(m.getBody());
             editSubject.setText(m.getSubject());
             editUrl.setText(m.getUrl());
-            imageView.setImageBitmap(m.getBitmap());
+   //         imageView.setImageBitmap(m.getBitmap());
         }
     }
 

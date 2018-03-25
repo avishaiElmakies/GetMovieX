@@ -1,5 +1,7 @@
 package com.example.android.getmoviex;
 
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.Image;
@@ -17,7 +19,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.zip.Inflater;
 
 public class MainActivity extends AppCompatActivity implements ImageTask.CallBack{
@@ -37,9 +43,9 @@ public class MainActivity extends AppCompatActivity implements ImageTask.CallBac
         myMovie=new ArrayList <>();
         myListView=findViewById(R.id.myListView);
         MyApp.setBackground(myListView);
-        myMovie.add(new Movie("Harry Potter","this is the body","url"));
-        myMovie.add(new Movie("Harry Potter","aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","url"));
-        myMovie.add(new Movie("Harry Potter","this is the secend movie","url"));
+        myMovie.add(new Movie("Harry Potter","this is the body",""));
+        myMovie.add(new Movie("Harry Potter","aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",""));
+        myMovie.add(new Movie("Harry Potter","this is the secend movie",""));
         myAdapter=new MovieAdapter(this,myMovie);
         myListView.setAdapter(myAdapter);
         myListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -103,9 +109,29 @@ public class MainActivity extends AppCompatActivity implements ImageTask.CallBac
     @Override
     public void onSucces(Bitmap bitmap) {
         Movie m=myAdapter.getItem(myAdapter.getCount()-1);
-        m.setBitmap(bitmap);
+        //HashMap<String,Bitmap> hashMap=myAdapter.getHashMap();
+        //hashMap.remove(m.getUrl());
+        //hashMap.put(m.getUrl(),bitmap);
+        //myAdapter.notifyDataSetChanged();
+        ContextWrapper contextWrapper=new ContextWrapper(MyApp.getContext());
+        File directory =contextWrapper.getDir("imageDir", Context.MODE_PRIVATE);
+        File path=new File(directory,m.getSubject()+".jpg");
+        FileOutputStream fos=null;
+        try{
+            fos=new FileOutputStream(path);
+            bitmap.compress(Bitmap.CompressFormat.PNG,100,fos);
+        }catch (FileNotFoundException fnfe){
+            fnfe.printStackTrace();
+        }
+        finally {
+            try {
+                fos.close();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        m.setUrl(directory.getAbsolutePath());
         myAdapter.notifyDataSetChanged();
-
         }
 
 
