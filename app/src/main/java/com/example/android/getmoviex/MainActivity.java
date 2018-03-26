@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements ImageTask.CallBac
         if(requestCode==REQUST_CODE_ADD_MOVIE){
             if(resultCode==RESULT_OK){
                 Movie m=(Movie)data.getSerializableExtra("movie");
-                myAdapter.add(m);
+                myMovie.add(m);
                 ImageTask imageTask=new ImageTask(this);
                 imageTask.execute(m.getUrl());
                 //todo: add sqlHelper
@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements ImageTask.CallBac
 
     @Override
     public void onSucces(Bitmap bitmap) {
-        Movie m=myAdapter.getItem(myAdapter.getCount()-1);
+        Movie m=myMovie.get(myMovie.size()-1);
         //HashMap<String,Bitmap> hashMap=myAdapter.getHashMap();
         //hashMap.remove(m.getUrl());
         //hashMap.put(m.getUrl(),bitmap);
@@ -137,6 +137,6 @@ public class MainActivity extends AppCompatActivity implements ImageTask.CallBac
 
     @Override
     public void onFail() {
-
+        myAdapter.notifyDataSetChanged();
     }
 }
