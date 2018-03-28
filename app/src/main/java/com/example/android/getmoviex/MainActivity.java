@@ -1,7 +1,10 @@
 package com.example.android.getmoviex;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.Image;
@@ -22,11 +25,13 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.InterruptedIOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.zip.Inflater;
 
-public class MainActivity extends AppCompatActivity implements ImageTask.CallBack{
+public class MainActivity extends AppCompatActivity implements ImageTask.CallBack,Movie.Actions{
     private static int REQUST_CODE_ADD_MOVIE=1;
     private static int REQUST_CODE_EDIT_MOVIE=2;
     private MenuItem addMovieItem;
@@ -56,6 +61,16 @@ public class MainActivity extends AppCompatActivity implements ImageTask.CallBac
                 intent.putExtra("movie",m);
                 intent.putExtra("index",i);
                 startActivityForResult(intent,REQUST_CODE_EDIT_MOVIE);
+            }
+        });
+        myListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(final AdapterView<?> adapterView, View view,final int index, long l) {
+                DialogOptions dialogOptions=new DialogOptions();
+                dialogOptions.setMovie((Movie)adapterView.getItemAtPosition(index));
+                dialogOptions.setIndex(index);
+                dialogOptions.show(getSupportFragmentManager(),"dialog");
+                return true;
             }
         });
     }
@@ -88,9 +103,7 @@ public class MainActivity extends AppCompatActivity implements ImageTask.CallBac
         if(requestCode==REQUST_CODE_ADD_MOVIE){
             if(resultCode==RESULT_OK){
                 Movie m=(Movie)data.getSerializableExtra("movie");
-                myMovie.add(m);
-                ImageTask imageTask=new ImageTask(this,myMovie.size()-1);
-                imageTask.execute(m.getUrl());
+                add(m);
                 //todo: add sqlHelper
             }else {
                 if(resultCode==RESULT_CANCELED){
@@ -103,12 +116,7 @@ public class MainActivity extends AppCompatActivity implements ImageTask.CallBac
                 if(resultCode==RESULT_OK) {
                     Movie m=(Movie)data.getSerializableExtra("movie");
                     int index=data.getIntExtra("index",-1);
-                    Movie oldMovie=myMovie.remove(index);
-                    myMovie.add(index,m);
-                    if(!oldMovie.getUrl().equals(m.getUrl())) {
-                        ImageTask imageTask = new ImageTask(this,index);
-                        imageTask.execute(m.getUrl());
-                    }
+                    update(m,index);
                 }
             }else{
                 if(resultCode==RESULT_CANCELED){
@@ -157,5 +165,31 @@ public class MainActivity extends AppCompatActivity implements ImageTask.CallBac
     @Override
     public void onFail() {
         myAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void add(Movie movie) {
+        myMovie.add(movie);
+        ImageTask imageTask=new ImageTask(this,myMovie.size()-1);
+        imageTask.execute(movie.getUrl());
+    }
+
+    @Override
+    public void update(Movie movie,int index) {
+
+        Movie oldMovie=myMovie.remove(index);
+        myMovie.add(index,movie);
+        if(!oldMovie.getUrl().equals(movie.getUrl())) {
+            ImageTask imageTask = new ImageTask(this,index);
+            imageTask.execute(movie.getUrl());
+        }
+        else{
+            myAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void delete(Movie movie) {
+
     }
 }

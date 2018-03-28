@@ -9,6 +9,11 @@ import java.io.Serializable;
  */
 
 public class Movie implements Serializable {
+    public interface Actions{
+        public void add(Movie movie);
+        public void update(Movie movie,int index);
+        public void delete(Movie movie);
+    }
     private int id;
     private String subject;
     private String body;
