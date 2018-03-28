@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements ImageTask.CallBac
                 Movie m =(Movie)adapterView.getItemAtPosition(i);
                 Intent intent=new Intent(getBaseContext(),AddMovieActivity.class);
                 intent.putExtra("movie",m);
+                intent.putExtra("index",i);
                 startActivityForResult(intent,REQUST_CODE_EDIT_MOVIE);
             }
         });
@@ -88,17 +89,35 @@ public class MainActivity extends AppCompatActivity implements ImageTask.CallBac
             if(resultCode==RESULT_OK){
                 Movie m=(Movie)data.getSerializableExtra("movie");
                 myMovie.add(m);
-                ImageTask imageTask=new ImageTask(this);
+                ImageTask imageTask=new ImageTask(this,myMovie.size()-1);
                 imageTask.execute(m.getUrl());
                 //todo: add sqlHelper
+            }else {
+                if(resultCode==RESULT_CANCELED){
+                    Toast.makeText(this,"canceled",Toast.LENGTH_SHORT).show();
+                }
             }
         }
-        if(requestCode==REQUST_CODE_ADD_MOVIE){
-            if(resultCode==RESULT_CANCELED){
-                Toast.makeText(this,"canceled",Toast.LENGTH_SHORT).show();
+        else {
+            if(requestCode==REQUST_CODE_EDIT_MOVIE) {
+                if(resultCode==RESULT_OK) {
+                    Movie m=(Movie)data.getSerializableExtra("movie");
+                    int index=data.getIntExtra("index",-1);
+                    Movie oldMovie=myMovie.remove(index);
+                    myMovie.add(index,m);
+                    if(!oldMovie.getUrl().equals(m.getUrl())) {
+                        ImageTask imageTask = new ImageTask(this,index);
+                        imageTask.execute(m.getUrl());
+                    }
+                }
+            }else{
+                if(resultCode==RESULT_CANCELED){
+                    Toast.makeText(this,"canceled",Toast.LENGTH_SHORT).show();
+                }
             }
         }
     }
+
 
 
     @Override
@@ -107,8 +126,8 @@ public class MainActivity extends AppCompatActivity implements ImageTask.CallBac
     }
 
     @Override
-    public void onSucces(Bitmap bitmap) {
-        Movie m=myMovie.get(myMovie.size()-1);
+    public void onSucces(Bitmap bitmap,int index) {
+        Movie m=myMovie.get(index);
         //HashMap<String,Bitmap> hashMap=myAdapter.getHashMap();
         //hashMap.remove(m.getUrl());
         //hashMap.put(m.getUrl(),bitmap);

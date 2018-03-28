@@ -22,13 +22,14 @@ public class AddMovieActivity extends AppCompatActivity implements ImageTask.Cal
     private ImageView imageView;
     private ScrollView scrollView;
     private RelativeLayout relativeLayout;
+    private Intent intent;
     private static int IMAGE_VIEW_WIDTH_DP=150;
     private static int IMAGE_VIEW_HEiGHT_DP=225;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_movie);
-        Intent intent=getIntent();
+        intent=getIntent();
         Movie m=(Movie) intent.getSerializableExtra("movie");
         scrollView=findViewById(R.id.scroll);
         relativeLayout=findViewById(R.id.relLayout);
@@ -51,9 +52,12 @@ public class AddMovieActivity extends AppCompatActivity implements ImageTask.Cal
     }
 
     public void onOkClick(View view) {
-       Intent intent=new Intent();
-        intent.putExtra("movie",new Movie(editSubject.getText().toString(),editBody.getText().toString(),editUrl.getText().toString()));
-        setResult(RESULT_OK,intent);
+        Intent intentOk=new Intent();
+        intentOk.putExtra("movie",new Movie(editSubject.getText().toString(),editBody.getText().toString(),editUrl.getText().toString()));
+        if(intent.hasExtra("index")){
+            intentOk.putExtra("index",intent.getIntExtra("index",-1));
+        }
+        setResult(RESULT_OK,intentOk);
         finish();
     }
 
@@ -72,7 +76,7 @@ public class AddMovieActivity extends AppCompatActivity implements ImageTask.Cal
     }
 
     @Override
-    public void onSucces(Bitmap bitmap) {
+    public void onSucces(Bitmap bitmap,int index) {
         imageView.setImageBitmap(bitmap);
     }
 
