@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.zip.Inflater;
 
-public class MainActivity extends AppCompatActivity implements ImageTask.CallBack,Movie.Actions{
+public class MainActivity extends AppCompatActivity implements ImageTask.CallBack,DialogOptions.Actions{
     private static int REQUST_CODE_ADD_MOVIE=1;
     private static int REQUST_CODE_EDIT_MOVIE=2;
     private MenuItem addMovieItem;
@@ -116,7 +116,15 @@ public class MainActivity extends AppCompatActivity implements ImageTask.CallBac
                 if(resultCode==RESULT_OK) {
                     Movie m=(Movie)data.getSerializableExtra("movie");
                     int index=data.getIntExtra("index",-1);
-                    update(m,index);
+                    Movie oldMovie=myMovie.remove(index);
+                    myMovie.add(index,m);
+                    if(!oldMovie.getUrl().equals(m.getUrl())){
+                        ImageTask imageTask=new ImageTask(this,index);
+                        imageTask.execute(m.getUrl());
+                    }
+                    else{
+                        myAdapter.notifyDataSetChanged();
+                    }
                 }
             }else{
                 if(resultCode==RESULT_CANCELED){
@@ -167,7 +175,7 @@ public class MainActivity extends AppCompatActivity implements ImageTask.CallBac
         myAdapter.notifyDataSetChanged();
     }
 
-    @Override
+
     public void add(Movie movie) {
         myMovie.add(movie);
         ImageTask imageTask=new ImageTask(this,myMovie.size()-1);
@@ -176,20 +184,15 @@ public class MainActivity extends AppCompatActivity implements ImageTask.CallBac
 
     @Override
     public void update(Movie movie,int index) {
-
-        Movie oldMovie=myMovie.remove(index);
-        myMovie.add(index,movie);
-        if(!oldMovie.getUrl().equals(movie.getUrl())) {
-            ImageTask imageTask = new ImageTask(this,index);
-            imageTask.execute(movie.getUrl());
-        }
-        else{
-            myAdapter.notifyDataSetChanged();
-        }
+        Intent intent=new Intent(this,AddMovieActivity.class);
+        intent.putExtra("movie",movie);
+        intent.putExtra("index",index);
+        startActivityForResult(intent,REQUST_CODE_EDIT_MOVIE);
     }
 
     @Override
     public void delete(Movie movie) {
-
+        myAdapter.remove(movie);
+        myAdapter.notifyDataSetChanged();
     }
 }
