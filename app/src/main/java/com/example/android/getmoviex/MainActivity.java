@@ -39,18 +39,17 @@ public class MainActivity extends AppCompatActivity implements ImageTask.CallBac
     private MenuItem exitItem;
     private MenuItem deleteAllItem;
     private ListView myListView;
+    MovieDatabaseHandler movieDatabaseHandler;
     private ArrayList<Movie> myMovie;
     MovieAdapter myAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        myMovie=new ArrayList <>();
+        movieDatabaseHandler=new MovieDatabaseHandler();
+        myMovie=movieDatabaseHandler.getAllMovies();
         myListView=findViewById(R.id.myListView);
         MyApp.setBackground(myListView);
-        myMovie.add(new Movie("Harry Potter","this is the body",""));
-        myMovie.add(new Movie("Harry Potter","aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",""));
-        myMovie.add(new Movie("Harry Potter","this is the secend movie",""));
         myAdapter=new MovieAdapter(this,myMovie);
         myListView.setAdapter(myAdapter);
         myListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -103,7 +102,10 @@ public class MainActivity extends AppCompatActivity implements ImageTask.CallBac
         if(requestCode==REQUST_CODE_ADD_MOVIE){
             if(resultCode==RESULT_OK){
                 Movie m=(Movie)data.getSerializableExtra("movie");
-                add(m);
+                myMovie.add(m);
+
+                ImageTask imageTask=new ImageTask(this,myMovie.size()-1);
+                imageTask.execute(m.getUrl());
                 //todo: add sqlHelper
             }else {
                 if(resultCode==RESULT_CANCELED){
@@ -143,7 +145,7 @@ public class MainActivity extends AppCompatActivity implements ImageTask.CallBac
 
     @Override
     public void onSucces(Bitmap bitmap,int index) {
-        Movie m=myMovie.get(index);
+        final Movie m=myMovie.get(index);
         //HashMap<String,Bitmap> hashMap=myAdapter.getHashMap();
         //hashMap.remove(m.getUrl());
         //hashMap.put(m.getUrl(),bitmap);
@@ -166,22 +168,14 @@ public class MainActivity extends AppCompatActivity implements ImageTask.CallBac
             }
         }
         m.setUrl(directory.getAbsolutePath());
+        startAddingToDatabase(m);
         myAdapter.notifyDataSetChanged();
         }
-
-
     @Override
-    public void onFail() {
+    public void onFail(int index) {
+        startAddingToDatabase(myMovie.get(index));
         myAdapter.notifyDataSetChanged();
     }
-
-
-    public void add(Movie movie) {
-        myMovie.add(movie);
-        ImageTask imageTask=new ImageTask(this,myMovie.size()-1);
-        imageTask.execute(movie.getUrl());
-    }
-
     @Override
     public void update(Movie movie,int index) {
         Intent intent=new Intent(this,AddMovieActivity.class);
@@ -189,10 +183,19 @@ public class MainActivity extends AppCompatActivity implements ImageTask.CallBac
         intent.putExtra("index",index);
         startActivityForResult(intent,REQUST_CODE_EDIT_MOVIE);
     }
-
     @Override
     public void delete(Movie movie) {
         myAdapter.remove(movie);
         myAdapter.notifyDataSetChanged();
+    }
+    public void startAddingToDatabase( final Movie movie){
+        Runnable runnable=new Runnable() {
+            @Override
+            public void run() {
+                movieDatabaseHandler.addMovie(movie);
+            }
+        };
+        Thread add=new Thread(runnable);
+        add.start();
     }
 }

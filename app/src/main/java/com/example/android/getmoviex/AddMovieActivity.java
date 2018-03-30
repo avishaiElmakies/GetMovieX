@@ -81,7 +81,7 @@ public class AddMovieActivity extends AppCompatActivity implements ImageTask.Cal
     }
 
     @Override
-    public void onFail() {
+    public void onFail(int index) {
 
     }
 }

@@ -17,7 +17,7 @@ public class ImageTask extends AsyncTask<String,Void,Bitmap>{
     public interface CallBack{
         void preExucute();
         void onSucces(Bitmap bitmap,int index);
-        void onFail();
+        void onFail(int index);
     }
     private CallBack callBack;
     private int index;
@@ -58,7 +58,7 @@ public class ImageTask extends AsyncTask<String,Void,Bitmap>{
             callBack.onSucces(bitmap,index);
         }
         else
-            callBack.onFail();
+            callBack.onFail(index);
     }
 
 }
