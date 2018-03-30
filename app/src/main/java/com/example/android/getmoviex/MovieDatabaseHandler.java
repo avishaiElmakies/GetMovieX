@@ -1,5 +1,6 @@
 package com.example.android.getmoviex;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -26,10 +27,27 @@ public class MovieDatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase database=getWritableDatabase();
         database.execSQL(str);
         Cursor cursor=database.rawQuery("SELECT last_insert_rowid() ",null);
-        int idIndex=cursor.getColumnIndex("_id");
-        movie.setId(idIndex);
+        cursor.moveToNext();
+        int id=cursor.getInt(0);
+        movie.setId(id);
         cursor.close();
         database.close();
+    }
+    public void deleteMovie(Movie movie){
+        String sql=String.format("DELETE FROM Movies WHERE _id=%d",movie.getId());
+        SQLiteDatabase db=getWritableDatabase();
+        db.execSQL(sql);
+        db.close();
+    }
+    public void updateMovie(Movie movie){
+        ContentValues contentValues=new ContentValues();
+        contentValues.put("subject",movie.getSubject());
+        contentValues.put("body",movie.getBody());
+        contentValues.put("url",movie.getUrl());
+        SQLiteDatabase db=getWritableDatabase();
+        String str=""+movie.getId();
+        db.update("Movies",contentValues,"_id=?",new String[] {""+movie.getId()});
+        db.close();
     }
     public ArrayList<Movie> getAllMovies(){
         ArrayList<Movie> list=new ArrayList<>();

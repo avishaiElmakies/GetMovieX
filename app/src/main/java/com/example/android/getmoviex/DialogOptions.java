@@ -23,7 +23,7 @@ public class DialogOptions extends DialogFragment {
     private Movie movie;
     private int index;
     public interface Actions{
-        public void update(Movie movie,int index);
+        public void goToUpdate(Movie movie,int index);
         public void delete(Movie movie);
     }
     @Override
@@ -49,7 +49,7 @@ public class DialogOptions extends DialogFragment {
         builder.setPositiveButton("UPDATE", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                actions.update(movie,index);
+                actions.goToUpdate(movie,index);
             }
         });
         builder.setNegativeButton("DELETE", new DialogInterface.OnClickListener() {

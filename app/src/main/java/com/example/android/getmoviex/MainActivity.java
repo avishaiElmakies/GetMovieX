@@ -103,8 +103,7 @@ public class MainActivity extends AppCompatActivity implements ImageTask.CallBac
             if(resultCode==RESULT_OK){
                 Movie m=(Movie)data.getSerializableExtra("movie");
                 myMovie.add(m);
-
-                ImageTask imageTask=new ImageTask(this,myMovie.size()-1);
+                ImageTask imageTask=new ImageTask(this,myMovie.size()-1,REQUST_CODE_ADD_MOVIE);
                 imageTask.execute(m.getUrl());
                 //todo: add sqlHelper
             }else {
@@ -121,16 +120,17 @@ public class MainActivity extends AppCompatActivity implements ImageTask.CallBac
                     Movie oldMovie=myMovie.remove(index);
                     myMovie.add(index,m);
                     if(!oldMovie.getUrl().equals(m.getUrl())){
-                        ImageTask imageTask=new ImageTask(this,index);
+                        ImageTask imageTask=new ImageTask(this,index,REQUST_CODE_EDIT_MOVIE);
                         imageTask.execute(m.getUrl());
                     }
                     else{
                         myAdapter.notifyDataSetChanged();
                     }
-                }
-            }else{
-                if(resultCode==RESULT_CANCELED){
-                    Toast.makeText(this,"canceled",Toast.LENGTH_SHORT).show();
+
+                }else{
+                    if(resultCode==RESULT_CANCELED){
+                        Toast.makeText(this,"canceled",Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         }
@@ -144,12 +144,8 @@ public class MainActivity extends AppCompatActivity implements ImageTask.CallBac
     }
 
     @Override
-    public void onSucces(Bitmap bitmap,int index) {
-        final Movie m=myMovie.get(index);
-        //HashMap<String,Bitmap> hashMap=myAdapter.getHashMap();
-        //hashMap.remove(m.getUrl());
-        //hashMap.put(m.getUrl(),bitmap);
-        //myAdapter.notifyDataSetChanged();
+    public void onSucces(Bitmap bitmap,int index,int requestCode) {
+        Movie m=myMovie.get(index);
         ContextWrapper contextWrapper=new ContextWrapper(MyApp.getContext());
         File directory =contextWrapper.getDir("imageDir", Context.MODE_PRIVATE);
         File path=new File(directory,m.getSubject()+".jpg");
@@ -168,31 +164,61 @@ public class MainActivity extends AppCompatActivity implements ImageTask.CallBac
             }
         }
         m.setUrl(directory.getAbsolutePath());
-        startAddingToDatabase(m);
-        myAdapter.notifyDataSetChanged();
+        if(requestCode==REQUST_CODE_ADD_MOVIE) {
+            startAddingToDatabase(m);
         }
-    @Override
-    public void onFail(int index) {
-        startAddingToDatabase(myMovie.get(index));
+        else if(requestCode==REQUST_CODE_EDIT_MOVIE){
+            startUpdatingInDatabase(m);
+        }
         myAdapter.notifyDataSetChanged();
     }
     @Override
-    public void update(Movie movie,int index) {
+    public void onFail(int index,int requestCode) {
+        Movie movie=myMovie.get(index);
+        if(requestCode==REQUST_CODE_ADD_MOVIE) {
+            startAddingToDatabase(movie);
+        }
+        else if(requestCode==REQUST_CODE_EDIT_MOVIE){
+           startUpdatingInDatabase(movie);
+        }
+        myAdapter.notifyDataSetChanged();
+    }
+    @Override
+    public void goToUpdate(Movie movie,int index) {
         Intent intent=new Intent(this,AddMovieActivity.class);
         intent.putExtra("movie",movie);
         intent.putExtra("index",index);
         startActivityForResult(intent,REQUST_CODE_EDIT_MOVIE);
     }
     @Override
-    public void delete(Movie movie) {
+    public void delete(final Movie movie) {
         myAdapter.remove(movie);
+        Runnable runnable=new Runnable() {
+            @Override
+            public void run() {
+                movieDatabaseHandler.deleteMovie(movie);
+            }
+        };
+        Thread thread=new Thread(runnable);
+        thread.start();
         myAdapter.notifyDataSetChanged();
     }
+    //think about making this a static function in databaseHandler
     public void startAddingToDatabase( final Movie movie){
         Runnable runnable=new Runnable() {
             @Override
             public void run() {
                 movieDatabaseHandler.addMovie(movie);
+            }
+        };
+        Thread add=new Thread(runnable);
+        add.start();
+    }
+    public void startUpdatingInDatabase(final Movie movie){
+        Runnable runnable=new Runnable() {
+            @Override
+            public void run() {
+                movieDatabaseHandler.updateMovie(movie);
             }
         };
         Thread add=new Thread(runnable);

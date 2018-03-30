@@ -1,7 +1,9 @@
 package com.example.android.getmoviex;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -14,6 +16,10 @@ import android.widget.Scroller;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+
 public class AddMovieActivity extends AppCompatActivity implements ImageTask.CallBack {
     //TODO change Scroller appearance
     private EditText editSubject;
@@ -21,8 +27,10 @@ public class AddMovieActivity extends AppCompatActivity implements ImageTask.Cal
     private EditText editUrl;
     private ImageView imageView;
     private ScrollView scrollView;
+    private Movie m;
     private RelativeLayout relativeLayout;
     private Intent intent;
+    ProgressDialog progressDialog;
     private static int IMAGE_VIEW_WIDTH_DP=150;
     private static int IMAGE_VIEW_HEiGHT_DP=225;
     @Override
@@ -30,7 +38,7 @@ public class AddMovieActivity extends AppCompatActivity implements ImageTask.Cal
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_movie);
         intent=getIntent();
-        Movie m=(Movie) intent.getSerializableExtra("movie");
+        m=(Movie) intent.getSerializableExtra("movie");
         scrollView=findViewById(R.id.scroll);
         relativeLayout=findViewById(R.id.relLayout);
         MyApp.setBackground(scrollView);
@@ -47,18 +55,35 @@ public class AddMovieActivity extends AppCompatActivity implements ImageTask.Cal
             editBody.setText(m.getBody());
             editSubject.setText(m.getSubject());
             editUrl.setText(m.getUrl());
-   //         imageView.setImageBitmap(m.getBitmap());
+            if(m.getUrl()!=null){
+                try{
+                    File file=new File(m.getUrl(),m.getSubject()+".jpg");
+                    Bitmap bitmap= BitmapFactory.decodeStream(new FileInputStream(file));
+                    imageView.setImageBitmap(bitmap);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
     public void onOkClick(View view) {
-        Intent intentOk=new Intent();
-        intentOk.putExtra("movie",new Movie(editSubject.getText().toString(),editBody.getText().toString(),editUrl.getText().toString()));
-        if(intent.hasExtra("index")){
-            intentOk.putExtra("index",intent.getIntExtra("index",-1));
+        if(!editSubject.getText().toString().equals("")) {
+            Intent intentOk = new Intent();
+            int id = 0;
+            if (m != null) {
+                id = m.getId();
+            }
+            intentOk.putExtra("movie", new Movie(id, editSubject.getText().toString(), editBody.getText().toString(), editUrl.getText().toString()));
+            if (intent.hasExtra("index")) {
+                intentOk.putExtra("index", intent.getIntExtra("index", -1));
+            }
+            setResult(RESULT_OK, intentOk);
+            finish();
         }
-        setResult(RESULT_OK,intentOk);
-        finish();
+        else{
+            Toast.makeText(this,"Please Enter Movie Name",Toast.LENGTH_LONG).show();
+        }
     }
 
     public void onCancelClick(View view) {
@@ -72,16 +97,22 @@ public class AddMovieActivity extends AppCompatActivity implements ImageTask.Cal
 
     @Override
     public void preExucute() {
-        Toast.makeText(this,"Starting",Toast.LENGTH_SHORT).show();
+        progressDialog=new ProgressDialog(this);
+        progressDialog.setTitle("Downloading");
+        progressDialog.setMessage("please wait....");
+        progressDialog.show();
     }
 
     @Override
-    public void onSucces(Bitmap bitmap,int index) {
+    public void onSucces(Bitmap bitmap,int index,int requestCode) {
         imageView.setImageBitmap(bitmap);
+        progressDialog.dismiss();
+
     }
 
     @Override
-    public void onFail(int index) {
-
+    public void onFail(int index,int requestCode) {
+        progressDialog.dismiss();
+        Toast.makeText(this,"Failed to load Picture from url",Toast.LENGTH_SHORT).show();
     }
 }
