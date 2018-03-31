@@ -15,10 +15,9 @@ import java.net.URL;
 
 public class ImageTask extends AsyncTask<String,Void,Bitmap>{
     public interface CallBack{
-        void preExucute();
-        void onSucces(Bitmap bitmap,int index,int requestCode);
+        void preExeucute();
+        void onSuccess(Bitmap bitmap,int index,int requestCode);
         void onFail(int index,int requestCode);
-
     }
     private CallBack callBack;
     private int index;
@@ -35,7 +34,7 @@ public class ImageTask extends AsyncTask<String,Void,Bitmap>{
     }
     @Override
     protected void onPreExecute() {
-        callBack.preExucute();
+        callBack.preExeucute();
     }
 
     @Override
@@ -59,7 +58,7 @@ public class ImageTask extends AsyncTask<String,Void,Bitmap>{
     @Override
     protected void onPostExecute(Bitmap bitmap) {
         if(bitmap!=null) {
-            callBack.onSucces(bitmap,index,request);
+            callBack.onSuccess(bitmap,index,request);
         }
         else
             callBack.onFail(index,request);

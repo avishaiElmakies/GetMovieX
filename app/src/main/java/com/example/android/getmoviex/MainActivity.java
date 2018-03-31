@@ -93,6 +93,11 @@ public class MainActivity extends AppCompatActivity implements ImageTask.CallBac
                 startActivityForResult(intent,REQUST_CODE_ADD_MOVIE);
                 return true;
             }
+            case R.id.addItemFromInternet:{
+                Intent intent=new Intent(this,SearchActivity.class);
+                startActivity(intent);
+                return true;
+            }
         }
         return false;
     }
@@ -139,12 +144,12 @@ public class MainActivity extends AppCompatActivity implements ImageTask.CallBac
 
 
     @Override
-    public void preExucute() {
+    public void preExeucute() {
 
     }
 
     @Override
-    public void onSucces(Bitmap bitmap,int index,int requestCode) {
+    public void onSuccess(Bitmap bitmap,int index,int requestCode) {
         Movie m=myMovie.get(index);
         ContextWrapper contextWrapper=new ContextWrapper(MyApp.getContext());
         File directory =contextWrapper.getDir("imageDir", Context.MODE_PRIVATE);

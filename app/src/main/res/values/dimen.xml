@@ -11,4 +11,5 @@
     <dimen name="bodyHeight">150sp</dimen>
     <dimen name="body_size">20sp</dimen>
     <dimen name="padding">5dp</dimen>
+    <dimen name="list_text_size">25dp</dimen>
 </resources>

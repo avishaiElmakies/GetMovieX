@@ -20,7 +20,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 
-public class AddMovieActivity extends AppCompatActivity implements ImageTask.CallBack {
+public class AddMovieActivity extends AppCompatActivity implements ImageTask.CallBack ,HttpRequest.HttpCallback{
     //TODO change Scroller appearance
     private EditText editSubject;
     private EditText editBody;
@@ -31,6 +31,7 @@ public class AddMovieActivity extends AppCompatActivity implements ImageTask.Cal
     private RelativeLayout relativeLayout;
     private Intent intent;
     ProgressDialog progressDialog;
+    private static String IMAGE_KEY = "https://image.tmdb.org/t/p/w500/";
     private static int IMAGE_VIEW_WIDTH_DP=150;
     private static int IMAGE_VIEW_HEiGHT_DP=225;
     @Override
@@ -38,7 +39,6 @@ public class AddMovieActivity extends AppCompatActivity implements ImageTask.Cal
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_movie);
         intent=getIntent();
-        m=(Movie) intent.getSerializableExtra("movie");
         scrollView=findViewById(R.id.scroll);
         relativeLayout=findViewById(R.id.relLayout);
         MyApp.setBackground(scrollView);
@@ -51,22 +51,31 @@ public class AddMovieActivity extends AppCompatActivity implements ImageTask.Cal
         params.width=PixelCalc.getPixels(IMAGE_VIEW_WIDTH_DP);
         params.height=PixelCalc.getPixels(IMAGE_VIEW_HEiGHT_DP);
         imageView.setLayoutParams(params);
-        if(m!=null){
-            editBody.setText(m.getBody());
-            editSubject.setText(m.getSubject());
-            editUrl.setText(m.getUrl());
-            if(m.getUrl()!=null){
-                try{
-                    File file=new File(m.getUrl(),m.getSubject()+".jpg");
-                    Bitmap bitmap= BitmapFactory.decodeStream(new FileInputStream(file));
-                    imageView.setImageBitmap(bitmap);
-                }catch (Exception e){
-                    e.printStackTrace();
+        if(intent.hasExtra("movie")) {
+            m = (Movie) intent.getSerializableExtra("movie");
+            if (m != null) {
+                editBody.setText(m.getBody());
+                editSubject.setText(m.getSubject());
+                editUrl.setText(m.getUrl());
+                if (m.getUrl() != null) {
+                    try {
+                        File file = new File(m.getUrl(), m.getSubject() + ".jpg");
+                        Bitmap bitmap = BitmapFactory.decodeStream(new FileInputStream(file));
+                        imageView.setImageBitmap(bitmap);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
+            }
+        }else{
+            if(intent.hasExtra("title")){
+            String title=intent.getStringExtra("title");
+                String request=title.replace(" ","+");
+                MovieSearchRequest movieSearchRequest=new MovieSearchRequest(this);
+                movieSearchRequest.searchMovies(request);
             }
         }
     }
-
     public void onOkClick(View view) {
         if(!editSubject.getText().toString().equals("")) {
             Intent intentOk = new Intent();
@@ -85,34 +94,47 @@ public class AddMovieActivity extends AppCompatActivity implements ImageTask.Cal
             Toast.makeText(this,"Please Enter Movie Name",Toast.LENGTH_LONG).show();
         }
     }
-
     public void onCancelClick(View view) {
         finish();
     }
-
     public void onShowClick(View view) {
         ImageTask imageTask=new ImageTask(this);
         imageTask.execute(editUrl.getText().toString());
     }
-
     @Override
-    public void preExucute() {
+    public void preExeucute() {
         progressDialog=new ProgressDialog(this);
         progressDialog.setTitle("Downloading");
         progressDialog.setMessage("please wait....");
         progressDialog.show();
     }
-
     @Override
-    public void onSucces(Bitmap bitmap,int index,int requestCode) {
+    public void onSuccess(Bitmap bitmap,int index,int requestCode) {
         imageView.setImageBitmap(bitmap);
         progressDialog.dismiss();
 
     }
-
     @Override
     public void onFail(int index,int requestCode) {
         progressDialog.dismiss();
         Toast.makeText(this,"Failed to load Picture from url",Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void preExecuteHttp() {
+        progressDialog=new ProgressDialog(this);
+        progressDialog.setTitle("Loading data");
+        progressDialog.setMessage("please wait....");
+        progressDialog.show();
+    }
+
+    @Override
+    public void onSuccessHttp(String downloaded) {
+
+    }
+
+    @Override
+    public void onErrorHttp(String errormsg) {
+
     }
 }
