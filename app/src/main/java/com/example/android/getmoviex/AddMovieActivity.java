@@ -31,7 +31,6 @@ public class AddMovieActivity extends AppCompatActivity implements ImageTask.Cal
     private RelativeLayout relativeLayout;
     private Intent intent;
     ProgressDialog progressDialog;
-    private static String IMAGE_KEY = "https://image.tmdb.org/t/p/w500/";
     private static int IMAGE_VIEW_WIDTH_DP=150;
     private static int IMAGE_VIEW_HEiGHT_DP=225;
     @Override
@@ -69,7 +68,7 @@ public class AddMovieActivity extends AppCompatActivity implements ImageTask.Cal
             }
         }else{
             if(intent.hasExtra("title")){
-            String title=intent.getStringExtra("title");
+                String title=intent.getStringExtra("title");
                 String request=title.replace(" ","+");
                 MovieSearchRequest movieSearchRequest=new MovieSearchRequest(this);
                 movieSearchRequest.searchMovies(request);

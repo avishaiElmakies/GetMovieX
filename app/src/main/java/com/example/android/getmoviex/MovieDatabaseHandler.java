@@ -23,7 +23,12 @@ public class MovieDatabaseHandler extends SQLiteOpenHelper {
     }
     //todo think about using Async to add to database
     public void addMovie(Movie movie){
-        String str=String.format(("INSERT INTO Movies(subject,body,url) VALUES('%s','%s','%s')"),movie.getSubject(),movie.getBody(),movie.getUrl());
+        String name=movie.getSubject();
+        String body=movie.getBody();
+        String url=movie.getUrl();
+        name=name.replace("\'","%&");
+        body=body.replace("\'","%&");
+        String str=String.format(("INSERT INTO Movies(subject,body,url) VALUES('%s','%s','%s')"),name,body,url);
         SQLiteDatabase database=getWritableDatabase();
         database.execSQL(str);
         Cursor cursor=database.rawQuery("SELECT last_insert_rowid() ",null);
@@ -59,8 +64,8 @@ public class MovieDatabaseHandler extends SQLiteOpenHelper {
         int urlIndex=cursor.getColumnIndex("url");
         while(cursor.moveToNext()){
             int id=cursor.getInt(idIndex);
-            String subject=cursor.getString(subjectIndex);
-            String body=cursor.getString(bodyIndex);
+            String subject=cursor.getString(subjectIndex).replace("%&","\'");
+            String body=cursor.getString(bodyIndex).replace("%&","\'");
             String url=cursor.getString(urlIndex);
             list.add(new Movie(id,subject,body,url));
         }

@@ -1,5 +1,6 @@
 package com.example.android.getmoviex;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -59,5 +60,13 @@ public class SearchActivity extends AppCompatActivity {
         String str=editText.getText().toString();
         String request=str.replace(" ","+");
         movieSearchRequset.searchMovies(request,page);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode==MainActivity.REQUST_CODE_ADD_MOVIE && resultCode==RESULT_OK) {
+            setResult(resultCode, data);
+            finish();
+        }
     }
 }

@@ -17,18 +17,20 @@ import java.util.ArrayList;
 
 public class MovieSearchRequest implements HttpRequest.HttpCallback {
     private static String HTTP_KEY = "27ed300656700faa90fce59d65e3481e";
-
+    private static String IMAGE_KEY = "https://image.tmdb.org/t/p/w500/";
     private static String RQEUST_URL ="https://api.themoviedb.org/3/search/movie?api_key=27ed300656700faa90fce59d65e3481e&query=%s";
     private static String PAGE_RQEUST="&page=%d";
     private Activity activity;
     private ListView searchListView;
     private ProgressDialog progressDialog;
     private ArrayList<String> movieNames;
+    private ArrayList<JSONObject> jsonList;
     public MovieSearchRequest(Activity activity){
         this.activity=activity;
         searchListView=activity.findViewById(R.id.listViewInternet);
         progressDialog=new ProgressDialog(activity);
         movieNames=new ArrayList<>();
+        jsonList=new ArrayList<>();
         progressDialog.setTitle("Downloading");
         progressDialog.setMessage("please wait....");
     }
@@ -55,6 +57,7 @@ public class MovieSearchRequest implements HttpRequest.HttpCallback {
             final JSONArray jsonArray=baseJsonObject.getJSONArray("results");
             for(int i=0;i<jsonArray.length();i++){
                 JSONObject jsonObject=jsonArray.getJSONObject(i);
+                jsonList.add(jsonObject);
                 String title=jsonObject.getString("title");
                 movieNames.add(title);
             }
@@ -73,10 +76,17 @@ public class MovieSearchRequest implements HttpRequest.HttpCallback {
         searchListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String title=(String)adapterView.getItemAtPosition(i);
+                JSONObject jsonObject=jsonList.get(i);
+                Movie movie=null;
+                try {
+                    movie = new Movie(jsonObject.getString("title"), jsonObject.getString("overview"),IMAGE_KEY+jsonObject.getString("poster_path"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 Intent intent=new Intent(activity,AddMovieActivity.class);
-                intent.putExtra("title",title);
-                activity.startActivity(intent);
+                intent.putExtra("movie",movie);
+                activity.startActivityForResult(intent,MainActivity.REQUST_CODE_ADD_MOVIE);
+
             }
         });
 

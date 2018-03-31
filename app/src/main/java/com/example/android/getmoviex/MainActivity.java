@@ -32,8 +32,8 @@ import java.util.HashMap;
 import java.util.zip.Inflater;
 
 public class MainActivity extends AppCompatActivity implements ImageTask.CallBack,DialogOptions.Actions{
-    private static int REQUST_CODE_ADD_MOVIE=1;
-    private static int REQUST_CODE_EDIT_MOVIE=2;
+    public static int REQUST_CODE_ADD_MOVIE=1;
+    public static int REQUST_CODE_EDIT_MOVIE=2;
     private MenuItem addMovieItem;
     private MenuItem addMovieItemInter;
     private MenuItem exitItem;
@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements ImageTask.CallBac
             }
             case R.id.addItemFromInternet:{
                 Intent intent=new Intent(this,SearchActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent,REQUST_CODE_ADD_MOVIE);
                 return true;
             }
         }
@@ -176,6 +176,7 @@ public class MainActivity extends AppCompatActivity implements ImageTask.CallBac
             startUpdatingInDatabase(m);
         }
         myAdapter.notifyDataSetChanged();
+        String str="\'";
     }
     @Override
     public void onFail(int index,int requestCode) {
