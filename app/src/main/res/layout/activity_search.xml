@@ -62,6 +62,7 @@
             android:text="@string/cancel"
             style="@style/ButtonStyle"
             android:layout_weight="1"
+            android:onClick="onClickCancel"
             />
         <Button
             android:id="@+id/buttonNextPage"

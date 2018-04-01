@@ -9,17 +9,12 @@ import java.io.Serializable;
  */
 
 public class Movie implements Serializable {
-    public interface Actions{
-        public void add(Movie movie);
-    }
     private int id;
     private String subject;
     private String body;
     private String url;
+    private String imgFileName;
    // private Bitmap bitmap;
-    public Movie(){
-
-    }
     public Movie(String subject,String body,String url){
         this.subject=subject;
         this.body=body;
@@ -31,7 +26,6 @@ public class Movie implements Serializable {
         this.body=body;
         this.url=url;
     }
-
     public int getId() {
         return id;
     }
@@ -63,10 +57,13 @@ public class Movie implements Serializable {
     public void setUrl(String url) {
         this.url = url;
     }
-  /*  public Bitmap getBitmap(){
-        return bitmap;
+
+    public String getImgFileName() {
+        return imgFileName;
     }
-    public void setBitmap(Bitmap bitmap){
-        this.bitmap=bitmap;
-    }*/
+
+    public void setImgFileName(String imgFileName) {
+        this.imgFileName = imgFileName;
+    }
+
 }

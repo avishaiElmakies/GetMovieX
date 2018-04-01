@@ -44,7 +44,6 @@ public class DialogOptions extends DialogFragment {
 
         AlertDialog.Builder builder=new AlertDialog.Builder(getActivity(),R.style.Theme_AppCompat_Dialog_Alert);
         builder.setTitle("Edit or delete?");
-
         builder.setMessage("do you want to update or delete this Movie?");
         builder.setPositiveButton("UPDATE", new DialogInterface.OnClickListener() {
             @Override
@@ -58,10 +57,8 @@ public class DialogOptions extends DialogFragment {
                 actions.delete(movie);
             }
         });
-
         AlertDialog dialog=builder.create();
         dialog.show();
-
         dialog.getWindow().setBackgroundDrawableResource(R.drawable.background_gradient);
         Button pb=dialog.getButton(DialogInterface.BUTTON_POSITIVE);
         pb.setTextColor(getActivity().getResources().getColor(R.color.white,null));

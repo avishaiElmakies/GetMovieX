@@ -54,6 +54,9 @@ public class SearchActivity extends AppCompatActivity {
             preButton.setEnabled(false);
         }
     }
+    public void onClickCancel(View view){
+        finish();
+    }
     public void startSearch(int page){
         EditText editText=findViewById(R.id.searchText);
         MovieSearchRequest movieSearchRequset=new MovieSearchRequest(this);
@@ -62,9 +65,10 @@ public class SearchActivity extends AppCompatActivity {
         movieSearchRequset.searchMovies(request,page);
     }
 
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode==MainActivity.REQUST_CODE_ADD_MOVIE && resultCode==RESULT_OK) {
+        if(requestCode==MainActivity.REQUEST_CODE_ADD_MOVIE && resultCode==RESULT_OK) {
             setResult(resultCode, data);
             finish();
         }

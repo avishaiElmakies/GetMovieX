@@ -73,11 +73,13 @@ public class MovieAdapter extends ArrayAdapter<Movie> { //implements ImageTask.C
         String path=movie.getUrl();
         if(!path.equals("")){
             try{
-                File file=new File(path,movie.getSubject()+".jpg");
+                File file=new File(path);
                 Bitmap bitmap=BitmapFactory.decodeStream(new FileInputStream(file));
                 imageView.setImageBitmap(bitmap);
             }catch (FileNotFoundException fnfe){
                 fnfe.printStackTrace();
+            }catch (NullPointerException npe){
+                npe.printStackTrace();
             }
         }
         return relativeLayout;

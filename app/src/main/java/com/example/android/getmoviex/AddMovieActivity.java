@@ -58,7 +58,7 @@ public class AddMovieActivity extends AppCompatActivity implements ImageTask.Cal
                 editUrl.setText(m.getUrl());
                 if (m.getUrl() != null) {
                     try {
-                        File file = new File(m.getUrl(), m.getSubject() + ".jpg");
+                        File file = new File(m.getUrl());
                         Bitmap bitmap = BitmapFactory.decodeStream(new FileInputStream(file));
                         imageView.setImageBitmap(bitmap);
                     } catch (Exception e) {

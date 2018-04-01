@@ -50,7 +50,7 @@ public class ImageTask extends AsyncTask<String,Void,Bitmap>{
             InputStream input=connection.getInputStream();
             bitmap = BitmapFactory.decodeStream(input);
         }catch (Exception e){
-//           Toast.makeText(MyApp.getContext(),"Error",Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
         }
         return bitmap;
     }

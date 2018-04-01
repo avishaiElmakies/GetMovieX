@@ -85,7 +85,7 @@ public class MovieSearchRequest implements HttpRequest.HttpCallback {
                 }
                 Intent intent=new Intent(activity,AddMovieActivity.class);
                 intent.putExtra("movie",movie);
-                activity.startActivityForResult(intent,MainActivity.REQUST_CODE_ADD_MOVIE);
+                activity.startActivityForResult(intent,MainActivity.REQUEST_CODE_ADD_MOVIE);
 
             }
         });

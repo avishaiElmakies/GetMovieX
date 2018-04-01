@@ -20,15 +20,15 @@ public class MovieDatabaseHandler extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int i, int i1) {
         db.execSQL("DROP TABLE MOVIES");
+        onCreate(db);
     }
     //todo think about using Async to add to database
     public void addMovie(Movie movie){
         String name=movie.getSubject();
         String body=movie.getBody();
-        String url=movie.getUrl();
         name=name.replace("\'","%&");
         body=body.replace("\'","%&");
-        String str=String.format(("INSERT INTO Movies(subject,body,url) VALUES('%s','%s','%s')"),name,body,url);
+        String str=String.format(("INSERT INTO Movies(subject,body,url) VALUES('%s','%s','%s')"),name,body,movie.getUrl());
         SQLiteDatabase database=getWritableDatabase();
         database.execSQL(str);
         Cursor cursor=database.rawQuery("SELECT last_insert_rowid() ",null);
@@ -70,5 +70,13 @@ public class MovieDatabaseHandler extends SQLiteOpenHelper {
             list.add(new Movie(id,subject,body,url));
         }
         return list;
+    }
+    public void deleteAll(ArrayList<Movie> movies){
+        for(int i=0;i<movies.size();i++){
+            Movie movie=movies.get(i);
+            SQLiteDatabase database=getWritableDatabase();
+            database.delete("Movies","_id="+movie.getId(),null);
+            database.close();
+        }
     }
 }

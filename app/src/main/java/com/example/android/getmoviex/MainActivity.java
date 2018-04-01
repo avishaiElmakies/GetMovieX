@@ -1,13 +1,11 @@
 package com.example.android.getmoviex;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.media.Image;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -15,33 +13,29 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.Button;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.InterruptedIOException;
-import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.zip.Inflater;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity implements ImageTask.CallBack,DialogOptions.Actions{
-    public static int REQUST_CODE_ADD_MOVIE=1;
-    public static int REQUST_CODE_EDIT_MOVIE=2;
+    public static int REQUEST_CODE_ADD_MOVIE =1;
+    public static int REQUEST_CODE_EDIT_MOVIE =2;
+    public static int REQUEST_CODE_DELETE_MOVIE =3;
     private MenuItem addMovieItem;
     private MenuItem addMovieItemInter;
     private MenuItem exitItem;
     private MenuItem deleteAllItem;
     private ListView myListView;
-    MovieDatabaseHandler movieDatabaseHandler;
+    private MovieDatabaseHandler movieDatabaseHandler;
     private ArrayList<Movie> myMovie;
-    MovieAdapter myAdapter;
+    private MovieAdapter myAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements ImageTask.CallBac
                 Intent intent=new Intent(getBaseContext(),AddMovieActivity.class);
                 intent.putExtra("movie",m);
                 intent.putExtra("index",i);
-                startActivityForResult(intent,REQUST_CODE_EDIT_MOVIE);
+                startActivityForResult(intent, REQUEST_CODE_EDIT_MOVIE);
             }
         });
         myListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -73,29 +67,56 @@ public class MainActivity extends AppCompatActivity implements ImageTask.CallBac
             }
         });
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater=getMenuInflater();
         inflater.inflate(R.menu.main_menu,menu);
-        addMovieItem=findViewById(R.id.addItem);//todo create activity addMovie
-        addMovieItemInter=findViewById(R.id.addItemFromInternet);//todo add activity addMovieInternet
-        exitItem=findViewById(R.id.exitItem);// todo make the app exit
-        deleteAllItem=findViewById(R.id.deleteAll);//todo make app delete all
+        addMovieItem=findViewById(R.id.addItem);
+        addMovieItemInter=findViewById(R.id.addItemFromInternet);
+        exitItem=findViewById(R.id.exitItem);
+        deleteAllItem=findViewById(R.id.deleteAll);
         return true;
     }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()){
             case R.id.addItem:{
                 Intent intent=new Intent(this,AddMovieActivity.class);
-                startActivityForResult(intent,REQUST_CODE_ADD_MOVIE);
+                startActivityForResult(intent, REQUEST_CODE_ADD_MOVIE);
                 return true;
             }
             case R.id.addItemFromInternet:{
                 Intent intent=new Intent(this,SearchActivity.class);
-                startActivityForResult(intent,REQUST_CODE_ADD_MOVIE);
+                startActivityForResult(intent, REQUEST_CODE_ADD_MOVIE);
+                return true;
+            }
+            case R.id.exitItem:{
+                finish();
+                return true;
+            }
+            case R.id.deleteAll:{
+                final AlertDialog.Builder builder=new AlertDialog.Builder(this,R.style.Theme_AppCompat_Dialog_Alert);
+                builder.setTitle("Are you sure?");
+                builder.setMessage("you can't undo this ");
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        movieDatabaseHandler.deleteAll(myMovie);
+                        myAdapter.clear();
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                    }
+                });
+                AlertDialog dialog=builder.create();
+                dialog.show();
+                dialog.getWindow().setBackgroundDrawableResource(R.drawable.background_gradient);
+                Button pb=dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+                pb.setTextColor(getResources().getColor(R.color.white,null));
+                Button nb=dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+                nb.setTextColor(getResources().getColor(R.color.white,null));
                 return true;
             }
         }
@@ -104,13 +125,12 @@ public class MainActivity extends AppCompatActivity implements ImageTask.CallBac
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode==REQUST_CODE_ADD_MOVIE){
+        if(requestCode== REQUEST_CODE_ADD_MOVIE){
             if(resultCode==RESULT_OK){
                 Movie m=(Movie)data.getSerializableExtra("movie");
                 myMovie.add(m);
-                ImageTask imageTask=new ImageTask(this,myMovie.size()-1,REQUST_CODE_ADD_MOVIE);
+                ImageTask imageTask=new ImageTask(this,myMovie.size()-1, REQUEST_CODE_ADD_MOVIE);
                 imageTask.execute(m.getUrl());
-                //todo: add sqlHelper
             }else {
                 if(resultCode==RESULT_CANCELED){
                     Toast.makeText(this,"canceled",Toast.LENGTH_SHORT).show();
@@ -118,18 +138,19 @@ public class MainActivity extends AppCompatActivity implements ImageTask.CallBac
             }
         }
         else {
-            if(requestCode==REQUST_CODE_EDIT_MOVIE) {
+            if(requestCode== REQUEST_CODE_EDIT_MOVIE) {
                 if(resultCode==RESULT_OK) {
                     Movie m=(Movie)data.getSerializableExtra("movie");
                     int index=data.getIntExtra("index",-1);
                     Movie oldMovie=myMovie.remove(index);
                     myMovie.add(index,m);
                     if(!oldMovie.getUrl().equals(m.getUrl())){
-                        ImageTask imageTask=new ImageTask(this,index,REQUST_CODE_EDIT_MOVIE);
+                        ImageTask imageTask=new ImageTask(this,index, REQUEST_CODE_EDIT_MOVIE);
                         imageTask.execute(m.getUrl());
                     }
                     else{
                         myAdapter.notifyDataSetChanged();
+                        getThreadBasedOnRequest(requestCode,m).start();
                     }
 
                 }else{
@@ -153,7 +174,9 @@ public class MainActivity extends AppCompatActivity implements ImageTask.CallBac
         Movie m=myMovie.get(index);
         ContextWrapper contextWrapper=new ContextWrapper(MyApp.getContext());
         File directory =contextWrapper.getDir("imageDir", Context.MODE_PRIVATE);
-        File path=new File(directory,m.getSubject()+".jpg");
+        String date=new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        m.setImgFileName(m.getSubject()+date+".jpg");
+        File path=new File(directory, m.getImgFileName());
         FileOutputStream fos=null;
         try{
             fos=new FileOutputStream(path);
@@ -168,66 +191,49 @@ public class MainActivity extends AppCompatActivity implements ImageTask.CallBac
                 e.printStackTrace();
             }
         }
-        m.setUrl(directory.getAbsolutePath());
-        if(requestCode==REQUST_CODE_ADD_MOVIE) {
-            startAddingToDatabase(m);
-        }
-        else if(requestCode==REQUST_CODE_EDIT_MOVIE){
-            startUpdatingInDatabase(m);
-        }
+        m.setUrl(path.getAbsolutePath());
         myAdapter.notifyDataSetChanged();
-        String str="\'";
+        getThreadBasedOnRequest(requestCode,m).start();
     }
     @Override
     public void onFail(int index,int requestCode) {
         Movie movie=myMovie.get(index);
-        if(requestCode==REQUST_CODE_ADD_MOVIE) {
-            startAddingToDatabase(movie);
-        }
-        else if(requestCode==REQUST_CODE_EDIT_MOVIE){
-           startUpdatingInDatabase(movie);
-        }
         myAdapter.notifyDataSetChanged();
+        getThreadBasedOnRequest(requestCode,movie).start();
     }
     @Override
     public void goToUpdate(Movie movie,int index) {
         Intent intent=new Intent(this,AddMovieActivity.class);
         intent.putExtra("movie",movie);
         intent.putExtra("index",index);
-        startActivityForResult(intent,REQUST_CODE_EDIT_MOVIE);
+        startActivityForResult(intent, REQUEST_CODE_EDIT_MOVIE);
     }
     @Override
     public void delete(final Movie movie) {
         myAdapter.remove(movie);
-        Runnable runnable=new Runnable() {
-            @Override
-            public void run() {
-                movieDatabaseHandler.deleteMovie(movie);
-            }
-        };
-        Thread thread=new Thread(runnable);
-        thread.start();
+        getThreadBasedOnRequest(REQUEST_CODE_DELETE_MOVIE,movie).start();
         myAdapter.notifyDataSetChanged();
     }
-    //think about making this a static function in databaseHandler
-    public void startAddingToDatabase( final Movie movie){
-        Runnable runnable=new Runnable() {
+    //think about making this a static function in databaseHandler//think about adding this to myApp
+    public Thread getThreadBasedOnRequest(final int request,final Movie movie){
+        final Runnable runnable=new Runnable() {
             @Override
             public void run() {
-                movieDatabaseHandler.addMovie(movie);
+                switch(request){
+                    case 1:{
+                        movieDatabaseHandler.addMovie(movie);
+                        break;
+                    }
+                    case 2: {
+                        movieDatabaseHandler.updateMovie(movie);
+                        break;
+                    }
+                    case 3:
+                        movieDatabaseHandler.deleteMovie(movie);
+                        break;
+                }
             }
         };
-        Thread add=new Thread(runnable);
-        add.start();
-    }
-    public void startUpdatingInDatabase(final Movie movie){
-        Runnable runnable=new Runnable() {
-            @Override
-            public void run() {
-                movieDatabaseHandler.updateMovie(movie);
-            }
-        };
-        Thread add=new Thread(runnable);
-        add.start();
+        return new Thread(runnable);
     }
 }
