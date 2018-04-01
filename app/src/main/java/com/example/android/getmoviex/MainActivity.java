@@ -175,8 +175,7 @@ public class MainActivity extends AppCompatActivity implements ImageTask.CallBac
         ContextWrapper contextWrapper=new ContextWrapper(MyApp.getContext());
         File directory =contextWrapper.getDir("imageDir", Context.MODE_PRIVATE);
         String date=new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        m.setImgFileName(m.getSubject()+date+".jpg");
-        File path=new File(directory, m.getImgFileName());
+        File path=new File(directory, m.getSubject()+date+".jpg");
         FileOutputStream fos=null;
         try{
             fos=new FileOutputStream(path);

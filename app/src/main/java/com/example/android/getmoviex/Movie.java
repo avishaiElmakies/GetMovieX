@@ -13,7 +13,7 @@ public class Movie implements Serializable {
     private String subject;
     private String body;
     private String url;
-    private String imgFileName;
+
    // private Bitmap bitmap;
     public Movie(String subject,String body,String url){
         this.subject=subject;
@@ -58,12 +58,5 @@ public class Movie implements Serializable {
         this.url = url;
     }
 
-    public String getImgFileName() {
-        return imgFileName;
-    }
-
-    public void setImgFileName(String imgFileName) {
-        this.imgFileName = imgFileName;
-    }
 
 }
