@@ -43,15 +43,15 @@ public class DialogOptions extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
         AlertDialog.Builder builder=new AlertDialog.Builder(getActivity(),R.style.Theme_AppCompat_Dialog_Alert);
-        builder.setTitle("Edit or delete?");
-        builder.setMessage("do you want to update or delete this Movie?");
-        builder.setPositiveButton("UPDATE", new DialogInterface.OnClickListener() {
+        builder.setTitle(R.string.edit_delete);
+        builder.setMessage(getActivity().getResources().getString(R.string.do_you_want_edit_delete));
+        builder.setPositiveButton(R.string.edit, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 actions.goToUpdate(movie,index);
             }
         });
-        builder.setNegativeButton("DELETE", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.delete, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 actions.delete(movie);

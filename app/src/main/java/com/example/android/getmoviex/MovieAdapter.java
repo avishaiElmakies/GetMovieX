@@ -27,10 +27,6 @@ public class MovieAdapter extends ArrayAdapter<Movie> { //implements ImageTask.C
     private TextView txtDes;
     private ImageView imageView;
     private Context context;
-    //private HashMap<String ,Bitmap > hashMap;
-    //private final static float MAX_DES_HEIGHT=MyApp.getContext().getResources().getDimension(R.dimen.max_height);
-    //private final static float TEXT_SIZE=MyApp.getContext().getResources().getDimension(R.dimen.text_size);
-    //private final static float MOVIE_WIDTH=MyApp.getContext().getResources().getDimension(R.dimen.movie_width);
     private final static int ITEM_HEIGHT_DP = 138;
     private final static int IMG_WIDTH_DP = 90;
     private final static int IMG_HEIGHT_DP = 138;
@@ -38,7 +34,6 @@ public class MovieAdapter extends ArrayAdapter<Movie> { //implements ImageTask.C
         super(context, 0, objects);
         this.context=context;
         layoutInflater = LayoutInflater.from(context);
-        //hashMap=new HashMap<>();
     }
 
     @NonNull
@@ -58,18 +53,6 @@ public class MovieAdapter extends ArrayAdapter<Movie> { //implements ImageTask.C
         Movie movie = getItem(position);
         txtSubject.setText(movie.getSubject());
         txtDes.setText(movie.getBody());
-       // if(movie.getBitmap()!=null){
-       //     imageView.setImageBitmap(movie.getBitmap());
-       // }
-       // if(hashMap.containsKey(movie.getUrl())){
-       //     Bitmap bitmap=hashMap.get(movie.getUrl());
-       //     if(bitmap!=null){
-       //         imageView.setImageBitmap(bitmap);
-        //    }
-       // }
-       // else {
-       //    hashMap.put(movie.getUrl(),null);
-       // }
         String path=movie.getUrl();
         if(!path.equals("")){
             try{
@@ -84,9 +67,6 @@ public class MovieAdapter extends ArrayAdapter<Movie> { //implements ImageTask.C
         }
         return relativeLayout;
     }
- //   public HashMap<String,Bitmap> getHashMap(){
-  //      return hashMap;
-  //  }
 }
 
 

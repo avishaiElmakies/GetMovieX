@@ -20,7 +20,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 
-public class AddMovieActivity extends AppCompatActivity implements ImageTask.CallBack ,HttpRequest.HttpCallback{
+public class AddMovieActivity extends AppCompatActivity implements ImageTask.CallBack{
     //TODO change Scroller appearance
     private EditText editSubject;
     private EditText editBody;
@@ -28,7 +28,7 @@ public class AddMovieActivity extends AppCompatActivity implements ImageTask.Cal
     private ImageView imageView;
     private ScrollView scrollView;
     private Movie m;
-    private RelativeLayout relativeLayout;
+
     private Intent intent;
     ProgressDialog progressDialog;
     private static int IMAGE_VIEW_WIDTH_DP=150;
@@ -39,7 +39,6 @@ public class AddMovieActivity extends AppCompatActivity implements ImageTask.Cal
         setContentView(R.layout.activity_add_movie);
         intent=getIntent();
         scrollView=findViewById(R.id.scroll);
-        relativeLayout=findViewById(R.id.relLayout);
         MyApp.setBackground(scrollView);
         editBody=findViewById(R.id.addMovieEdit);
         editSubject=findViewById(R.id.movieNameEdit);
@@ -90,7 +89,7 @@ public class AddMovieActivity extends AppCompatActivity implements ImageTask.Cal
             finish();
         }
         else{
-            Toast.makeText(this,"Please Enter Movie Name",Toast.LENGTH_LONG).show();
+            Toast.makeText(this,R.string.enter_name,Toast.LENGTH_LONG).show();
         }
     }
     public void onCancelClick(View view) {
@@ -103,8 +102,8 @@ public class AddMovieActivity extends AppCompatActivity implements ImageTask.Cal
     @Override
     public void preExeucute() {
         progressDialog=new ProgressDialog(this);
-        progressDialog.setTitle("Downloading");
-        progressDialog.setMessage("please wait....");
+        progressDialog.setTitle(R.string.downloading);
+        progressDialog.setMessage(getResources().getString(R.string.wait));
         progressDialog.show();
     }
     @Override
@@ -116,24 +115,6 @@ public class AddMovieActivity extends AppCompatActivity implements ImageTask.Cal
     @Override
     public void onFail(int index,int requestCode) {
         progressDialog.dismiss();
-        Toast.makeText(this,"Failed to load Picture from url",Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void preExecuteHttp() {
-        progressDialog=new ProgressDialog(this);
-        progressDialog.setTitle("Loading data");
-        progressDialog.setMessage("please wait....");
-        progressDialog.show();
-    }
-
-    @Override
-    public void onSuccessHttp(String downloaded) {
-
-    }
-
-    @Override
-    public void onErrorHttp(String errormsg) {
-
+        Toast.makeText(this,R.string.failed_picture,Toast.LENGTH_SHORT).show();
     }
 }
