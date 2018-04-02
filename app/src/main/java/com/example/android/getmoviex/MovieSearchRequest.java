@@ -31,8 +31,8 @@ public class MovieSearchRequest implements HttpRequest.HttpCallback {
         progressDialog=new ProgressDialog(activity);
         movieNames=new ArrayList<>();
         jsonList=new ArrayList<>();
-        progressDialog.setTitle("Downloading");
-        progressDialog.setMessage("please wait....");
+        progressDialog.setTitle(R.string.downloading);
+        progressDialog.setMessage(activity.getResources().getString(R.string.wait));
     }
     public void searchMovies(String searchQuary){
         String request=String.format(RQEUST_URL,searchQuary);
@@ -70,7 +70,7 @@ public class MovieSearchRequest implements HttpRequest.HttpCallback {
             ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(activity, R.layout.internet_item, R.id.textViewInternt, movieNames);
             searchListView.setAdapter(arrayAdapter);
         }else{
-            Toast.makeText(activity,"No more Pages",Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity,R.string.no_more_pages,Toast.LENGTH_SHORT).show();
         }
         progressDialog.dismiss();
         searchListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

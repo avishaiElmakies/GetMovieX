@@ -22,5 +22,10 @@
     <string name="do_you_want_edit_delete">do you want to edit or delete this Movie</string>
     <string name="edit">edit</string>
     <string name="delete">delete</string>
+    <string name="canceled">Canceled</string>
+    <string name="yes">Yes</string>
+    <string name="sure">Are you sure?</string>
+    <string name="cant_undo">you can\'t undo this</string>
+    <string name="no_more_pages">no more pages</string>
 
 </resources>

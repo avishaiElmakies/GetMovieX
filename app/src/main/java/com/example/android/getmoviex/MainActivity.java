@@ -96,16 +96,16 @@ public class MainActivity extends AppCompatActivity implements ImageTask.CallBac
             }
             case R.id.deleteAll:{
                 final AlertDialog.Builder builder=new AlertDialog.Builder(this,R.style.Theme_AppCompat_Dialog_Alert);
-                builder.setTitle("Are you sure?");
-                builder.setMessage("you can't undo this ");
-                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                builder.setTitle(R.string.sure);
+                builder.setMessage(R.string.cant_undo);
+                builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         movieDatabaseHandler.deleteAll(myMovie);
                         myAdapter.clear();
                     }
                 });
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                     }
@@ -133,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements ImageTask.CallBac
                 imageTask.execute(m.getUrl());
             }else {
                 if(resultCode==RESULT_CANCELED){
-                    Toast.makeText(this,"canceled",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this,R.string.canceled,Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -155,7 +155,7 @@ public class MainActivity extends AppCompatActivity implements ImageTask.CallBac
 
                 }else{
                     if(resultCode==RESULT_CANCELED){
-                        Toast.makeText(this,"canceled",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this,R.string.canceled,Toast.LENGTH_SHORT).show();
                     }
                 }
             }
