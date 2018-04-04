@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -9,8 +7,14 @@
         android:layout_gravity="center"
 
         >
-
-        <ImageView
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/relative"
+        android:orientation="vertical"
+        android:gravity="center">
+         <ImageView
+             android:layout_margin="@dimen/margin"
             android:id="@+id/imageView"
             android:layout_width="@dimen/movie_width"
             android:layout_height="wrap_content"
@@ -20,31 +24,40 @@
             android:src="@drawable/movie_night"
             />
 
+        <ImageView
+            android:layout_margin="@dimen/margin"
+            android:id="@+id/imageShare"
+            android:layout_width="@dimen/img_share_size"
+            android:layout_height="@dimen/img_share_size"
+            android:layout_below="@+id/imageView"
+            android:layout_centerHorizontal="true"
+            app:srcCompat="@drawable/share" />
+
+    </LinearLayout>
     <TextView
         android:id="@+id/textSubject"
         style="@style/TextStyle"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_marginTop="@dimen/margin"
-        android:layout_toEndOf="@+id/imageView"
+        android:layout_toEndOf="@+id/relative"
         android:gravity="left"
         android:padding="@dimen/padding"
         android:text="TextView"
         android:textColor="@color/white"
         android:textSize="@dimen/movie_name_size"
         android:textStyle="bold" />
-
-                <TextView
-                    android:layout_height="match_parent"
-                    style="@style/TextStyle"
-                    android:id="@+id/textDes"
-                    android:layout_below="@+id/textSubject"
-                    android:layout_toEndOf="@+id/imageView"
-                    android:layout_centerVertical="true"
-                    android:layout_marginBottom="@dimen/margin_bottom"
-                    android:textColor="@color/white"
-                    android:paddingStart="@dimen/margin_bottom"
-                    android:paddingEnd="@dimen/margin_bottom"
+    <TextView
+        android:layout_height="match_parent"
+        style="@style/TextStyle"
+        android:id="@+id/textDes"
+        android:layout_below="@+id/textSubject"
+        android:layout_toEndOf="@+id/relative"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="@dimen/margin_bottom"
+        android:textColor="@color/white"
+        android:paddingStart="@dimen/margin_bottom"
+        android:paddingEnd="@dimen/margin_bottom"
                     />
 
 </RelativeLayout>

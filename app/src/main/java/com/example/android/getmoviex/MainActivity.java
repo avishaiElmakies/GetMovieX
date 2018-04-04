@@ -173,13 +173,13 @@ public class MainActivity extends AppCompatActivity implements ImageTask.CallBac
     public void onSuccess(Bitmap bitmap,int index,int requestCode) {
         Movie m=myMovie.get(index);
         ContextWrapper contextWrapper=new ContextWrapper(MyApp.getContext());
-        File directory =contextWrapper.getDir("imageDir", Context.MODE_PRIVATE);
+        File directory =contextWrapper.getFilesDir();
         String date=new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        File path=new File(directory, m.getSubject()+date+".jpg");
+        File path=new File(directory, m.getSubject()+date+".jpeg");
         FileOutputStream fos=null;
         try{
             fos=new FileOutputStream(path);
-            bitmap.compress(Bitmap.CompressFormat.PNG,100,fos);
+            bitmap.compress(Bitmap.CompressFormat.JPEG,100,fos);
         }catch (FileNotFoundException fnfe){
             fnfe.printStackTrace();
         }
