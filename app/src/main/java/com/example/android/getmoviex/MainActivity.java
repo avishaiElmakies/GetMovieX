@@ -150,7 +150,7 @@ public class MainActivity extends AppCompatActivity implements ImageTask.CallBac
                     }
                     else{
                         myAdapter.notifyDataSetChanged();
-                        getThreadBasedOnRequest(requestCode,m).start();
+                        movieDatabaseHandler.getThreadBasedOnRequest(requestCode,m).start();
                     }
 
                 }else{
@@ -192,13 +192,13 @@ public class MainActivity extends AppCompatActivity implements ImageTask.CallBac
         }
         m.setUrl(path.getAbsolutePath());
         myAdapter.notifyDataSetChanged();
-        getThreadBasedOnRequest(requestCode,m).start();
+        movieDatabaseHandler.getThreadBasedOnRequest(requestCode,m).start();
     }
     @Override
     public void onFail(int index,int requestCode) {
         Movie movie=myMovie.get(index);
         myAdapter.notifyDataSetChanged();
-        getThreadBasedOnRequest(requestCode,movie).start();
+        movieDatabaseHandler.getThreadBasedOnRequest(requestCode,movie).start();
     }
     @Override
     public void goToUpdate(Movie movie,int index) {
@@ -210,29 +210,9 @@ public class MainActivity extends AppCompatActivity implements ImageTask.CallBac
     @Override
     public void delete(final Movie movie) {
         myAdapter.remove(movie);
-        getThreadBasedOnRequest(REQUEST_CODE_DELETE_MOVIE,movie).start();
+        movieDatabaseHandler.getThreadBasedOnRequest(REQUEST_CODE_DELETE_MOVIE,movie).start();
         myAdapter.notifyDataSetChanged();
     }
     //think about making this a static function in databaseHandler//think about adding this to myApp
-    public Thread getThreadBasedOnRequest(final int request,final Movie movie){
-        final Runnable runnable=new Runnable() {
-            @Override
-            public void run() {
-                switch(request){
-                    case 1:{
-                        movieDatabaseHandler.addMovie(movie);
-                        break;
-                    }
-                    case 2: {
-                        movieDatabaseHandler.updateMovie(movie);
-                        break;
-                    }
-                    case 3:
-                        movieDatabaseHandler.deleteMovie(movie);
-                        break;
-                }
-            }
-        };
-        return new Thread(runnable);
-    }
+
 }

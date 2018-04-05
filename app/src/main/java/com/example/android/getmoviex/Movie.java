@@ -13,18 +13,21 @@ public class Movie implements Serializable {
     private String subject;
     private String body;
     private String url;
+    private int rating;
 
    // private Bitmap bitmap;
     public Movie(String subject,String body,String url){
-        this.subject=subject;
-        this.body=body;
-        this.url=url;
+        setSubject(subject);
+        setBody(body);
+        setUrl(url);
+        rating=0;
     }
-    public Movie(int id ,String subject,String body,String url){
-        this.id=id;
-        this.subject=subject;
-        this.body=body;
-        this.url=url;
+    public Movie(int id ,String subject,String body,String url,int rating){
+        setId(id);
+        setSubject(subject);
+        setBody(body);
+        setUrl(url);
+        setRating(rating);
     }
     public int getId() {
         return id;
@@ -58,5 +61,11 @@ public class Movie implements Serializable {
         this.url = url;
     }
 
+    public int getRating() {
+        return rating;
+    }
 
+    public void setRating(int rating) {
+        this.rating = rating;
+    }
 }

@@ -14,7 +14,7 @@ public class MovieDatabaseHandler extends SQLiteOpenHelper {
     }
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE Movies(_id INTEGER PRIMARY KEY AUTOINCREMENT,subject TEXT NOT NULL,body TEXT,url TEXT)");
+        db.execSQL("CREATE TABLE Movies(_id INTEGER PRIMARY KEY AUTOINCREMENT,subject TEXT NOT NULL,body TEXT,url TEXT,rating INTEGER)");
     }
 
     @Override
@@ -49,6 +49,7 @@ public class MovieDatabaseHandler extends SQLiteOpenHelper {
         contentValues.put("subject",movie.getSubject());
         contentValues.put("body",movie.getBody());
         contentValues.put("url",movie.getUrl());
+        contentValues.put("rating",movie.getRating());
         SQLiteDatabase db=getWritableDatabase();
         String str=""+movie.getId();
         db.update("Movies",contentValues,"_id=?",new String[] {""+movie.getId()});
@@ -62,12 +63,14 @@ public class MovieDatabaseHandler extends SQLiteOpenHelper {
         int subjectIndex=cursor.getColumnIndex("subject");
         int bodyIndex=cursor.getColumnIndex("body");
         int urlIndex=cursor.getColumnIndex("url");
+        int ratingIndex=cursor.getColumnIndex("rating");
         while(cursor.moveToNext()){
             int id=cursor.getInt(idIndex);
             String subject=cursor.getString(subjectIndex).replace("%&","\'");
             String body=cursor.getString(bodyIndex).replace("%&","\'");
-            String url=cursor.getString(urlIndex).replace("%&","\'");;
-            list.add(new Movie(id,subject,body,url));
+            String url=cursor.getString(urlIndex).replace("%&","\'");
+            int rating=cursor.getInt(ratingIndex);
+            list.add(new Movie(id,subject,body,url,rating));
         }
         return list;
     }
@@ -78,5 +81,26 @@ public class MovieDatabaseHandler extends SQLiteOpenHelper {
             database.delete("Movies","_id="+movie.getId(),null);
             database.close();
         }
+    }
+    public Thread getThreadBasedOnRequest(final int request,final Movie movie){
+        final Runnable runnable=new Runnable() {
+            @Override
+            public void run() {
+                switch(request){
+                    case 1:{
+                        addMovie(movie);
+                        break;
+                    }
+                    case 2: {
+                        updateMovie(movie);
+                        break;
+                    }
+                    case 3:
+                        deleteMovie(movie);
+                        break;
+                }
+            }
+        };
+        return new Thread(runnable);
     }
 }

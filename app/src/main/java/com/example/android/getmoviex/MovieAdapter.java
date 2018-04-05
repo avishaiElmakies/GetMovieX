@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.StrictMode;
@@ -18,6 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import java.io.File;
@@ -35,10 +38,12 @@ public class MovieAdapter extends ArrayAdapter<Movie> { //implements ImageTask.C
     private ImageView imageView;
     private Context context;
     private ImageView imgShare;
-    private final static int ITEM_HEIGHT_DP = 138;
+    private SeekBar seekBar;
+    private final static int ITEM_HEIGHT_DP = 165;
     private final static int IMG_WIDTH_DP = 60;
     private final static int IMG_HEIGHT_DP = 90;
     private final static int IMG_SHARE_SIZE=20;
+    private final static int SEEK_HEIGHT=20;
     public MovieAdapter(@NonNull Context context, @NonNull List<Movie> objects) {
         super(context, 0, objects);
         this.context=context;
@@ -53,6 +58,7 @@ public class MovieAdapter extends ArrayAdapter<Movie> { //implements ImageTask.C
         txtDes = relativeLayout.findViewById(R.id.textDes);
         imageView = relativeLayout.findViewById(R.id.imageView);
         imgShare=relativeLayout.findViewById(R.id.imageShare);
+        seekBar=relativeLayout.findViewById(R.id.seekBar);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, PixelCalc.getPixels(ITEM_HEIGHT_DP));
         relativeLayout.setLayoutParams(params);
         LinearLayout.LayoutParams imgParams = (LinearLayout.LayoutParams) imageView.getLayoutParams();
@@ -63,9 +69,32 @@ public class MovieAdapter extends ArrayAdapter<Movie> { //implements ImageTask.C
         imgShareParams.height = PixelCalc.getPixels(IMG_SHARE_SIZE);
         imgShareParams.height = PixelCalc.getPixels(IMG_SHARE_SIZE);
         imageView.setLayoutParams(imgParams);
+        RelativeLayout.LayoutParams seekParams = (RelativeLayout.LayoutParams) seekBar.getLayoutParams();
+        seekParams.height = PixelCalc.getPixels(SEEK_HEIGHT);
+        seekBar.setLayoutParams(seekParams);
         final Movie movie = getItem(position);
         txtSubject.setText(movie.getSubject());
         txtDes.setText(movie.getBody());
+        seekBar.setProgress(movie.getRating());
+        changeSeekColor(seekBar);
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                changeSeekColor(seekBar);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                movie.setRating(seekBar.getProgress());
+                new MovieDatabaseHandler().getThreadBasedOnRequest(MainActivity.REQUEST_CODE_EDIT_MOVIE,movie).start();
+            }
+        });
+
         String path=movie.getUrl();
         if(!path.equals("")){
             try{
@@ -93,6 +122,23 @@ public class MovieAdapter extends ArrayAdapter<Movie> { //implements ImageTask.C
             }
         });
         return relativeLayout;
+    }
+    public void changeSeekColor(SeekBar seekBar){
+        if(seekBar.getProgress()>=7) {
+            seekBar.getProgressDrawable().setColorFilter(Color.GREEN, PorterDuff.Mode.MULTIPLY);
+            seekBar.getThumb().setColorFilter(Color.GREEN, PorterDuff.Mode.SRC_ATOP);
+        }
+        if(seekBar.getProgress()>=4 && seekBar.getProgress()<7)
+        {
+            seekBar.getProgressDrawable().setColorFilter(Color.YELLOW, PorterDuff.Mode.MULTIPLY);
+            seekBar.getThumb().setColorFilter(Color.YELLOW, PorterDuff.Mode.SRC_ATOP);
+
+        }
+        if(seekBar.getProgress()<=3) {
+            seekBar.getProgressDrawable().setColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY);
+            seekBar.getThumb().setColorFilter(Color.RED, PorterDuff.Mode.SRC_ATOP);
+
+        }
     }
 }
 
