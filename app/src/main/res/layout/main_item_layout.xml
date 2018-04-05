@@ -4,8 +4,7 @@
         android:layout_height="wrap_content"
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_gravity="center"
-
+        android:descendantFocusability="blocksDescendants"
         >
     <LinearLayout
         android:layout_width="wrap_content"
@@ -47,11 +46,22 @@
         android:textColor="@color/white"
         android:textSize="@dimen/movie_name_size"
         android:textStyle="bold" />
+
+    <SeekBar
+        android:id="@+id/seekBar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/seek_bar_height"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/textSubject"
+        android:layout_toEndOf="@+id/relative"
+        android:max="10"
+        android:progress="0"
+        />
     <TextView
-        android:layout_height="match_parent"
+        android:layout_height="@dimen/item_body_height"
         style="@style/TextStyle"
         android:id="@+id/textDes"
-        android:layout_below="@+id/textSubject"
+        android:layout_below="@+id/seekBar"
         android:layout_toEndOf="@+id/relative"
         android:layout_centerVertical="true"
         android:layout_marginBottom="@dimen/margin_bottom"
@@ -59,5 +69,8 @@
         android:paddingStart="@dimen/margin_bottom"
         android:paddingEnd="@dimen/margin_bottom"
                     />
+
+
+
 
 </RelativeLayout>
