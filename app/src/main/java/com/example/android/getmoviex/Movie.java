@@ -14,20 +14,23 @@ public class Movie implements Serializable {
     private String body;
     private String url;
     private int rating;
+    private boolean watched;
 
    // private Bitmap bitmap;
     public Movie(String subject,String body,String url){
         setSubject(subject);
         setBody(body);
         setUrl(url);
-        rating=0;
+        setRating(0);
+        setWatched(false);
     }
-    public Movie(int id ,String subject,String body,String url,int rating){
+    public Movie(int id ,String subject,String body,String url,int rating,boolean watched){
         setId(id);
         setSubject(subject);
         setBody(body);
         setUrl(url);
         setRating(rating);
+        setWatched(watched);
     }
     public int getId() {
         return id;
@@ -67,5 +70,13 @@ public class Movie implements Serializable {
 
     public void setRating(int rating) {
         this.rating = rating;
+    }
+
+    public boolean isWatched() {
+        return watched;
+    }
+
+    public void setWatched(boolean watched) {
+        this.watched = watched;
     }
 }

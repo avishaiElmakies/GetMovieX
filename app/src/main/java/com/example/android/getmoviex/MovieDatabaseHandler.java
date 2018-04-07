@@ -14,7 +14,7 @@ public class MovieDatabaseHandler extends SQLiteOpenHelper {
     }
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE Movies(_id INTEGER PRIMARY KEY AUTOINCREMENT,subject TEXT NOT NULL,body TEXT,url TEXT,rating INTEGER)");
+        db.execSQL("CREATE TABLE Movies(_id INTEGER PRIMARY KEY AUTOINCREMENT,subject TEXT NOT NULL,body TEXT,url TEXT,rating INTEGER,watched BIT)");
     }
 
     @Override
@@ -50,6 +50,7 @@ public class MovieDatabaseHandler extends SQLiteOpenHelper {
         contentValues.put("body",movie.getBody());
         contentValues.put("url",movie.getUrl());
         contentValues.put("rating",movie.getRating());
+        contentValues.put("watched",(movie.isWatched()?1:0));
         SQLiteDatabase db=getWritableDatabase();
         String str=""+movie.getId();
         db.update("Movies",contentValues,"_id=?",new String[] {""+movie.getId()});
@@ -64,13 +65,15 @@ public class MovieDatabaseHandler extends SQLiteOpenHelper {
         int bodyIndex=cursor.getColumnIndex("body");
         int urlIndex=cursor.getColumnIndex("url");
         int ratingIndex=cursor.getColumnIndex("rating");
+        int watchedIndex=cursor.getColumnIndex("watched");
         while(cursor.moveToNext()){
             int id=cursor.getInt(idIndex);
             String subject=cursor.getString(subjectIndex).replace("%&","\'");
             String body=cursor.getString(bodyIndex).replace("%&","\'");
             String url=cursor.getString(urlIndex).replace("%&","\'");
             int rating=cursor.getInt(ratingIndex);
-            list.add(new Movie(id,subject,body,url,rating));
+            boolean watched=(cursor.getInt(watchedIndex)==1);
+            list.add(new Movie(id,subject,body,url,rating,watched));
         }
         return list;
     }

@@ -9,10 +9,11 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/relative"
+        android:id="@+id/LinearLayout"
         android:orientation="vertical"
         android:gravity="center">
-         <ImageView
+
+        <ImageView
              android:layout_margin="@dimen/margin"
             android:id="@+id/imageView"
             android:layout_width="@dimen/movie_width"
@@ -24,13 +25,21 @@
             />
 
         <ImageView
-            android:layout_margin="@dimen/margin"
             android:id="@+id/imageShare"
             android:layout_width="@dimen/img_share_size"
             android:layout_height="@dimen/img_share_size"
             android:layout_below="@+id/imageView"
             android:layout_centerHorizontal="true"
             app:srcCompat="@drawable/share" />
+
+        <ToggleButton
+            style="@style/ButtonStyle"
+            android:id="@+id/toggleButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ToggleButton"
+            android:textOn="@string/saw"
+            android:textOff=""/>
 
     </LinearLayout>
     <TextView
@@ -39,7 +48,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_marginTop="@dimen/margin"
-        android:layout_toEndOf="@+id/relative"
+        android:layout_toEndOf="@+id/LinearLayout"
         android:gravity="left"
         android:padding="@dimen/padding"
         android:text="TextView"
@@ -53,7 +62,7 @@
         android:layout_height="@dimen/seek_bar_height"
         android:layout_alignParentEnd="true"
         android:layout_below="@+id/textSubject"
-        android:layout_toEndOf="@+id/relative"
+        android:layout_toEndOf="@+id/LinearLayout"
         android:max="10"
         android:progress="0"
         />
@@ -62,7 +71,7 @@
         style="@style/TextStyle"
         android:id="@+id/textDes"
         android:layout_below="@+id/seekBar"
-        android:layout_toEndOf="@+id/relative"
+        android:layout_toEndOf="@+id/LinearLayout"
         android:layout_centerVertical="true"
         android:layout_marginBottom="@dimen/margin_bottom"
         android:textColor="@color/white"

@@ -79,11 +79,13 @@ public class AddMovieActivity extends AppCompatActivity implements ImageTask.Cal
             Intent intentOk = new Intent();
             int id = 0;
             int rating=0;
+            boolean watched=false;
             if (m != null) {
                 id = m.getId();
                 rating=m.getRating();
+                watched=m.isWatched();
             }
-            intentOk.putExtra("movie", new Movie(id, editSubject.getText().toString(), editBody.getText().toString(), editUrl.getText().toString(),rating));
+            intentOk.putExtra("movie", new Movie(id, editSubject.getText().toString(), editBody.getText().toString(), editUrl.getText().toString(),rating,watched));
             if (intent.hasExtra("index")) {
                 intentOk.putExtra("index", intent.getIntExtra("index", -1));
             }

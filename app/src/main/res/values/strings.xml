@@ -27,5 +27,6 @@
     <string name="sure">Are you sure?</string>
     <string name="cant_undo">you can\'t undo this</string>
     <string name="no_more_pages">no more pages</string>
+    <string name="saw">saw</string>
 
 </resources>

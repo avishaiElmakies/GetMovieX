@@ -9,6 +9,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.StrictMode;
+import android.os.TokenWatcher;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,11 +18,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -39,6 +42,7 @@ public class MovieAdapter extends ArrayAdapter<Movie> { //implements ImageTask.C
     private Context context;
     private ImageView imgShare;
     private SeekBar seekBar;
+    private ToggleButton toggleButton;
     private final static int ITEM_HEIGHT_DP = 165;
     private final static int IMG_WIDTH_DP = 60;
     private final static int IMG_HEIGHT_DP = 90;
@@ -59,6 +63,7 @@ public class MovieAdapter extends ArrayAdapter<Movie> { //implements ImageTask.C
         imageView = relativeLayout.findViewById(R.id.imageView);
         imgShare=relativeLayout.findViewById(R.id.imageShare);
         seekBar=relativeLayout.findViewById(R.id.seekBar);
+        toggleButton=relativeLayout.findViewById(R.id.toggleButton);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, PixelCalc.getPixels(ITEM_HEIGHT_DP));
         relativeLayout.setLayoutParams(params);
         LinearLayout.LayoutParams imgParams = (LinearLayout.LayoutParams) imageView.getLayoutParams();
@@ -76,6 +81,7 @@ public class MovieAdapter extends ArrayAdapter<Movie> { //implements ImageTask.C
         txtSubject.setText(movie.getSubject());
         txtDes.setText(movie.getBody());
         seekBar.setProgress(movie.getRating());
+        toggleButton.setChecked(movie.isWatched());
         changeSeekColor(seekBar);
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -92,6 +98,15 @@ public class MovieAdapter extends ArrayAdapter<Movie> { //implements ImageTask.C
             public void onStopTrackingTouch(SeekBar seekBar) {
                 movie.setRating(seekBar.getProgress());
                 new MovieDatabaseHandler().getThreadBasedOnRequest(MainActivity.REQUEST_CODE_EDIT_MOVIE,movie).start();
+            }
+        });
+
+        toggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    movie.setWatched(b);
+                new MovieDatabaseHandler().getThreadBasedOnRequest(MainActivity.REQUEST_CODE_EDIT_MOVIE,movie).start();
+
             }
         });
 
