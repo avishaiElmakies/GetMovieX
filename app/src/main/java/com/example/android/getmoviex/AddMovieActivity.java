@@ -21,7 +21,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 
 public class AddMovieActivity extends AppCompatActivity implements ImageTask.CallBack{
-    //TODO change Scroller appearance
+    
     private EditText editSubject;
     private EditText editBody;
     private EditText editUrl;
