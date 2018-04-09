@@ -125,15 +125,24 @@ public class MovieAdapter extends ArrayAdapter<Movie> { //implements ImageTask.C
         imgShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent=new Intent();
+                Intent intent = new Intent();
                 intent.setAction(Intent.ACTION_SEND);
-                File file=new File(movie.getUrl());
-                Uri uri= FileProvider.getUriForFile(MyApp.getContext(),BuildConfig.APPLICATION_ID+".provider",file);
-                intent.putExtra(Intent.EXTRA_STREAM, uri);
-                intent.setType("image/*");
-                intent.putExtra(Intent.EXTRA_TEXT,movie.getSubject()+":"+movie.getBody());
-                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                MyApp.getContext().startActivity(Intent.createChooser(intent,"select an app to share"));
+                try {
+                    File file = new File(movie.getUrl());
+                    Uri uri = FileProvider.getUriForFile(MyApp.getContext(), BuildConfig.APPLICATION_ID + ".provider", file);
+                    intent.putExtra(Intent.EXTRA_STREAM, uri);
+                    intent.setType("image/*");
+                }catch (Exception e){
+                    e.printStackTrace();
+                }finally {
+                    if(intent.getType()==null){
+                        intent.setType("text/plain");
+                    }
+                    intent.putExtra(Intent.EXTRA_TEXT,movie.getSubject()+":"+movie.getBody());
+                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    MyApp.getContext().startActivity(Intent.createChooser(intent,"select an app to share"));
+                }
+
             }
         });
         return relativeLayout;
